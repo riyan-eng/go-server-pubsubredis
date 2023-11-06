@@ -1,0 +1,15 @@
+{
+    "redis": {
+        "host": "172.17.0.1",
+        "port": 6379,
+        "username": "default",
+        "password": "riyan",
+        "db": 0
+    },
+    "smtp": {
+        "host": "smtp.gmail.com",
+        "port": 587,
+        "email": "email@gmail.com",
+        "password": "rahasia"
+    }
+}

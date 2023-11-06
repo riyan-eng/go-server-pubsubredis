@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  backend:
+    build: .
+    container_name: cipung.subsciber
+    image: cipung.subsciber
+    volumes:
+      - ./env-dev.json:/opt/env.json
+networks:
+  network1:
+    name: bridge
+    external: true

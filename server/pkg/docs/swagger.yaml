@@ -187,6 +187,18 @@ paths:
       summary: Validate Token Reset Password
       tags:
       - Authentication
+  /example-template/:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Template
+      tags:
+      - Example
   /example/:
     get:
       parameters:

@@ -66,7 +66,7 @@ func (a *authenticationQuery) ResetPassword(req dtorepository.AuthenticationRese
 
 func (a *authenticationQuery) Logout(req dtorepository.AuthenticationLogoutReq) {
 	ctx := context.Background()
-	err := a.cache.Del(ctx, fmt.Sprintf("token-%v", req.IDUser)).Err()
+	err := a.cache.Del(ctx, fmt.Sprintf("token-%v", req.UserUUID)).Err()
 	util.PanicIfNeeded(err)
 }
 
@@ -77,8 +77,8 @@ func (a *authenticationQuery) Me(req dtorepository.AuthenticationMeReq) (sqlrows
 	from users u 
 	left join roles r on u."role" = r.kode
 	left join user_datas ud on u.user_data = ud.uuid 
-	where u.id = %v limit 1
-	`, req.IDUser)
+	where u.uuid = %v limit 1
+	`, req.UserUUID)
 	sqlrows, err := a.sqlDB.Query(query)
 	util.PanicIfNeeded(err)
 	return

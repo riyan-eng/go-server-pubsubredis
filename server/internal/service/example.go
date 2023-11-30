@@ -10,6 +10,7 @@ import (
 	"server/pkg/util"
 
 	"github.com/blockloop/scan/v2"
+	"github.com/google/uuid"
 	"github.com/xuri/excelize/v2"
 )
 
@@ -21,6 +22,7 @@ type ExampleService interface {
 	Put(dtoservice.PutExampleReq)
 	Patch(dtoservice.PatchExampleReq)
 	Template() dtoservice.TemplateExampleRes
+	Import(dtoservice.ImportExampleReq)
 }
 
 type exampleService struct {
@@ -51,8 +53,8 @@ func (t *exampleService) List(req dtoservice.ListExampleReq) (res dtoservice.Lis
 
 func (t *exampleService) Create(req dtoservice.CreateExampleReq) {
 	item := model.Example{
-		UUID:   req.UUID,
-		Nama:   req.Nama,
+		UUID:   uuid.NewString(),
+		Nama:   sql.NullString{String: req.Nama, Valid: util.ValidIsNotBlankString(req.Nama)},
 		Detail: sql.NullString{String: req.Detail, Valid: util.ValidIsNotBlankString(req.Detail)},
 	}
 	t.dao.NewExampleQuery().Create(dtorepository.CreateExampleReq{
@@ -62,13 +64,13 @@ func (t *exampleService) Create(req dtoservice.CreateExampleReq) {
 
 func (t *exampleService) Delete(req dtoservice.DeleteExampleReq) {
 	t.dao.NewExampleQuery().Delete(dtorepository.DeleteExampleReq{
-		ID: req.ID,
+		UUID: req.UUID,
 	})
 }
 
 func (t *exampleService) Detail(req dtoservice.DetailExampleReq) (res dtoservice.DetailExampleRes) {
 	sqlrows := t.dao.NewExampleQuery().Detail(dtorepository.DetailExampleReq{
-		ID: req.ID,
+		UUID: req.UUID,
 	})
 	err := scan.Row(&res.Item, sqlrows)
 	util.PanicIfNeeded(err)
@@ -77,8 +79,8 @@ func (t *exampleService) Detail(req dtoservice.DetailExampleReq) (res dtoservice
 
 func (t *exampleService) Put(req dtoservice.PutExampleReq) {
 	item := model.Example{
-		ID:   req.ID,
-		Nama: req.Nama,
+		UUID: req.UUID,
+		Nama: sql.NullString{String: req.Nama, Valid: util.ValidIsNotBlankString(req.Nama)},
 	}
 	t.dao.NewExampleQuery().Put(dtorepository.PutExampleReq{
 		Item: item,
@@ -87,8 +89,8 @@ func (t *exampleService) Put(req dtoservice.PutExampleReq) {
 
 func (t *exampleService) Patch(req dtoservice.PatchExampleReq) {
 	item := model.Example{
-		ID:   req.ID,
-		Nama: req.Nama,
+		UUID: req.UUID,
+		Nama: sql.NullString{String: req.Nama, Valid: util.ValidIsNotBlankString(req.Nama)},
 	}
 	t.dao.NewExampleQuery().Patch(dtorepository.PatchExampleReq{
 		Item: item,
@@ -110,4 +112,19 @@ func (t *exampleService) Template() (res dtoservice.TemplateExampleRes) {
 
 	res.File = f
 	return
+}
+
+func (t *exampleService) Import(req dtoservice.ImportExampleReq) {
+	var items []model.Example
+	for _, i := range req.Items {
+		items = append(items, model.Example{
+			UUID:   uuid.NewString(),
+			Nama:   sql.NullString{String: i.Nama, Valid: util.ValidIsNotBlankString(i.Nama)},
+			Detail: sql.NullString{String: i.Detail, Valid: util.ValidIsNotBlankString(i.Detail)},
+		})
+	}
+
+	t.dao.NewExampleQuery().Import(dtorepository.ImportExampleReq{
+		Items: items,
+	})
 }

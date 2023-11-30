@@ -7,5 +7,6 @@ create table example(
     updated_at timestamp default current_timestamp,
     
     primary key(id),
-    unique(uuid)
+    unique(uuid),
+    unique(nama)
 );

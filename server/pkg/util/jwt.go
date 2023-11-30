@@ -22,7 +22,7 @@ type CachedToken struct {
 }
 
 type CustomClaim struct {
-	UserID   string `json:"user_id"`
+	UserUUID string `json:"user_id"`
 	RoleCode string `json:"role_code"`
 	UID      string `json:"uid"`
 	jwt.RegisteredClaims
@@ -41,16 +41,16 @@ type JwtResult struct {
 	ExpiredAt     *jwt.NumericDate
 }
 
-func GenerateJwt(userID, roleCode, issuer string) JwtResult {
-	access := createToken(userID, roleCode, issuer, env.JWT_SECRET_ACCESS, env.JWT_EXPIRED_ACCESS)
-	refresh := createToken(userID, roleCode, issuer, env.JWT_SECRET_REFRESH, env.JWT_EXPIRED_REFRESH)
+func GenerateJwt(userUUID, roleCode, issuer string) JwtResult {
+	access := createToken(userUUID, roleCode, issuer, env.JWT_SECRET_ACCESS, env.JWT_EXPIRED_ACCESS)
+	refresh := createToken(userUUID, roleCode, issuer, env.JWT_SECRET_REFRESH, env.JWT_EXPIRED_REFRESH)
 	cachedJson, err := json.Marshal(CachedToken{
 		AccessUID:  access.uid,
 		RefreshUID: refresh.uid,
 	})
 	PanicIfNeeded(err)
 	ctx := context.Background()
-	infrastructure.Redis.Set(ctx, fmt.Sprintf("token-%s", userID), string(cachedJson), time.Minute*env.JWT_EXPIRED_LOGOFF)
+	infrastructure.Redis.Set(ctx, fmt.Sprintf("token-%s", userUUID), string(cachedJson), time.Minute*env.JWT_EXPIRED_LOGOFF)
 	return JwtResult{
 		AccessToken:  access.token,
 		RefreshToken: refresh.token,
@@ -58,25 +58,25 @@ func GenerateJwt(userID, roleCode, issuer string) JwtResult {
 	}
 }
 
-func GenerateTokenResetPassword(userID, roleCode, issuer string) JwtResult {
-	tokenResetPwd := createToken(userID, roleCode, issuer, env.JWT_SECRET_RESET, env.JWT_EXPIRED_RESET)
+func GenerateTokenResetPassword(userUUID, roleCode, issuer string) JwtResult {
+	tokenResetPwd := createToken(userUUID, roleCode, issuer, env.JWT_SECRET_RESET, env.JWT_EXPIRED_RESET)
 	cachedJson, err := json.Marshal(CachedToken{
 		ResetPwdUID: tokenResetPwd.uid,
 	})
 	PanicIfNeeded(err)
 	ctx := context.Background()
-	infrastructure.Redis.Set(ctx, fmt.Sprintf("token-%s", userID), string(cachedJson), time.Minute*env.JWT_EXPIRED_LOGOFF)
+	infrastructure.Redis.Set(ctx, fmt.Sprintf("token-%s", userUUID), string(cachedJson), time.Minute*env.JWT_EXPIRED_LOGOFF)
 	return JwtResult{
 		ResetPwdToken: tokenResetPwd.token,
 		ExpiredAt:     tokenResetPwd.expat,
 	}
 }
 
-func createToken(userID, roleCode, issuer, secret string, expMinute time.Duration) tokenResult {
+func createToken(userUUID, roleCode, issuer, secret string, expMinute time.Duration) tokenResult {
 	uid := uuid.NewString()
 	expat := jwt.NewNumericDate(time.Now().Add(expMinute * time.Minute))
 	claims := CustomClaim{
-		userID,
+		userUUID,
 		roleCode,
 		uid,
 		jwt.RegisteredClaims{
@@ -113,7 +113,7 @@ func ValidateToken(claims *CustomClaim, tokenType string) (err error) {
 	ctx := context.Background()
 	g := new(errgroup.Group)
 	g.Go(func() error {
-		cacheJSON, _ := infrastructure.Redis.Get(ctx, fmt.Sprintf("token-%s", claims.UserID)).Result()
+		cacheJSON, _ := infrastructure.Redis.Get(ctx, fmt.Sprintf("token-%s", claims.UserUUID)).Result()
 		cachedTokens := new(CachedToken)
 		err := json.Unmarshal([]byte(cacheJSON), cachedTokens)
 		var tokenUID string

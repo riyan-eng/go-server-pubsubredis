@@ -56,11 +56,11 @@ type AuthenticationResetPasswordReq struct {
 }
 
 type AuthenticationLogoutReq struct {
-	IDUser int
+	UserUUID string
 }
 
 type AuthenticationMeReq struct {
-	IDUser int
+	UserUUID string
 }
 
 type AuthenticationMeRes struct {

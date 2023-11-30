@@ -6,7 +6,6 @@ import (
 	"server/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/google/uuid"
 	"github.com/riyan-eng/riyanisgood"
 )
 
@@ -25,9 +24,7 @@ func (s *ServiceServer) CreateExample(c *fiber.Ctx) error {
 	if err != nil {
 		return util.NewResponse(c).Error(errors, util.MESSAGE_FAILED_VALIDATION, fiber.StatusBadRequest)
 	}
-	uuid := uuid.NewString()
 	s.exampleService.Create(dtoservice.CreateExampleReq{
-		UUID:   uuid,
 		Nama:   body.Nama,
 		Detail: body.Detail,
 	})

@@ -205,6 +205,26 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/example-template/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Example"
+                ],
+                "summary": "Template",
+                "responses": {}
+            }
+        },
         "/example/": {
             "get": {
                 "security": [

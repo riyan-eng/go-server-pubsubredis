@@ -14,11 +14,11 @@ type ListExampleReq struct {
 }
 
 type DetailExampleReq struct {
-	ID int
+	UUID string
 }
 
 type DeleteExampleReq struct {
-	ID int
+	UUID string
 }
 
 type PutExampleReq struct {
@@ -27,4 +27,8 @@ type PutExampleReq struct {
 
 type PatchExampleReq struct {
 	Item model.Example
+}
+
+type ImportExampleReq struct {
+	Items []model.Example
 }

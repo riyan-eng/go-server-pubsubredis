@@ -7,7 +7,6 @@ import (
 )
 
 type CreateExampleReq struct {
-	UUID   string
 	Nama   string
 	Detail string
 }
@@ -25,7 +24,7 @@ type ListExampleRes struct {
 }
 
 type DetailExampleReq struct {
-	ID int
+	UUID string
 }
 
 type DetailExampleRes struct {
@@ -33,21 +32,30 @@ type DetailExampleRes struct {
 }
 
 type DeleteExampleReq struct {
-	ID int
+	UUID string
 }
 
 type PutExampleReq struct {
-	ID     int
+	UUID   string
 	Nama   string
 	Detail string
 }
 
 type PatchExampleReq struct {
-	ID     int
+	UUID   string
 	Nama   string
 	Detail string
 }
 
 type TemplateExampleRes struct {
 	File *excelize.File
+}
+
+type ImportExampleReq struct {
+	Items []ImportExampleItemReq
+}
+
+type ImportExampleItemReq struct {
+	Nama   string
+	Detail string
 }

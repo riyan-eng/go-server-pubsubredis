@@ -13,9 +13,9 @@ import (
 // @Router		/auth/logout/ [delete]
 // @Security ApiKeyAuth
 func (s *ServiceServer) Logout(c *fiber.Ctx) error {
-	idUser := util.StringNumToInt(c.Locals("user_id").(string))
+	userUUID := c.Locals("user_uuid").(string)
 	s.authService.Logout(dtoservice.AuthenticationLogoutReq{
-		IDUser: idUser,
+		UserUUID: userUUID,
 	})
 	return util.NewResponse(c).Success(nil, nil, util.MESSAGE_OK_LOGOUT)
 }

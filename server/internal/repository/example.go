@@ -18,6 +18,7 @@ type ExampleQuery interface {
 	Detail(dtorepository.DetailExampleReq) *sql.Rows
 	Put(dtorepository.PutExampleReq)
 	Patch(dtorepository.PatchExampleReq)
+	Import(dtorepository.ImportExampleReq)
 }
 
 type exampleQuery struct {
@@ -40,25 +41,30 @@ func (t *exampleQuery) Create(req dtorepository.CreateExampleReq) {
 }
 
 func (t *exampleQuery) Delete(req dtorepository.DeleteExampleReq) {
-	err := t.gormDB.Delete(&model.Example{}, req.ID).Error
+	err := t.gormDB.Where("uuid = ?", req.UUID).Delete(&model.Example{}).Error
 	util.PanicIfNeeded(err)
 }
 
 func (t *exampleQuery) Detail(req dtorepository.DetailExampleReq) *sql.Rows {
 	query := fmt.Sprintf(`
-		select id, uuid, nama, coalesce(detail, '') as detail, created_at, updated_at from example where id = '%v'
-	`, req.ID)
+		select id, uuid, nama, coalesce(detail, '') as detail, created_at, updated_at from example where uuid = '%v'
+	`, req.UUID)
 	rows, err := t.sqlDB.Query(query)
 	util.PanicIfNeeded(err)
 	return rows
 }
 
 func (t *exampleQuery) Put(req dtorepository.PutExampleReq) {
-	err := t.gormDB.Model(&model.Example{}).Select("nama", "detail").Where("id = ?", req.Item.ID).Updates(req.Item).Error
+	err := t.gormDB.Model(&model.Example{}).Select("nama", "detail").Where("uuid = ?", req.Item.UUID).Updates(req.Item).Error
 	util.PanicIfNeeded(err)
 }
 
 func (t *exampleQuery) Patch(req dtorepository.PatchExampleReq) {
-	err := t.gormDB.Model(&model.Example{}).Where("id = ?", req.Item.ID).Updates(req.Item).Error
+	err := t.gormDB.Model(&model.Example{}).Where("uuid = ?", req.Item.UUID).Updates(req.Item).Error
+	util.PanicIfNeeded(err)
+}
+
+func (t *exampleQuery) Import(req dtorepository.ImportExampleReq) {
+	err := t.gormDB.Create(&req.Items).Error
 	util.PanicIfNeeded(err)
 }

@@ -50,7 +50,7 @@ func (a *authenticationService) RefreshToken(req dtoservice.AuthenticationRefres
 			Message: "Invalid refresh token.",
 		})
 	}
-	genJwt := util.GenerateJwt(claim.UserID, claim.RoleCode, req.Issuer)
+	genJwt := util.GenerateJwt(claim.UserUUID, claim.RoleCode, req.Issuer)
 	res.AccessToken = genJwt.AccessToken
 	res.RefreshToken = genJwt.RefreshToken
 	res.ExpiredAt = genJwt.ExpiredAt
@@ -73,7 +73,7 @@ func (a *authenticationService) ResetPassword(req dtoservice.AuthenticationReset
 	// change password
 	password := util.GenerateHash(req.Password)
 	tabelUser := model.User{
-		ID:       util.StringNumToInt(claim.UserID),
+		UUID:     claim.UserUUID,
 		Password: sql.NullString{String: password, Valid: util.ValidIsNotBlankString(password)},
 	}
 	a.dao.NewAuthenticationQuery().ResetPassword(dtorepository.AuthenticationResetPasswordReq{
@@ -82,7 +82,7 @@ func (a *authenticationService) ResetPassword(req dtoservice.AuthenticationReset
 
 	// delete token
 	a.dao.NewAuthenticationQuery().Logout(dtorepository.AuthenticationLogoutReq{
-		IDUser: util.StringNumToInt(claim.UserID),
+		UserUUID: claim.UserUUID,
 	})
 }
 
@@ -109,7 +109,7 @@ func (a *authenticationService) Login(req dtoservice.AuthenticationLoginReq) (re
 			})
 		}
 		res.Match = true
-		genJwt := util.GenerateJwt(strconv.Itoa(user.ID), user.KodeRole, req.Issuer)
+		genJwt := util.GenerateJwt(user.UUID, user.KodeRole, req.Issuer)
 		res.AccessToken = genJwt.AccessToken
 		res.RefreshToken = genJwt.RefreshToken
 		res.ExpiredAt = genJwt.ExpiredAt
@@ -142,13 +142,13 @@ func (a *authenticationService) Register(req dtoservice.AuthenticationRegisterRe
 
 func (a *authenticationService) Logout(req dtoservice.AuthenticationLogoutReq) {
 	a.dao.NewAuthenticationQuery().Logout(dtorepository.AuthenticationLogoutReq{
-		IDUser: req.IDUser,
+		UserUUID: req.UserUUID,
 	})
 }
 
 func (a *authenticationService) Me(req dtoservice.AuthenticationMeReq) (res dtoservice.AuthenticationMeRes) {
 	sqlRows := a.dao.NewAuthenticationQuery().Me(dtorepository.AuthenticationMeReq{
-		IDUser: req.IDUser,
+		UserUUID: req.UserUUID,
 	})
 
 	err := scan.Row(&res.Data, sqlRows)

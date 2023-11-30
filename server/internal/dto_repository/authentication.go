@@ -12,7 +12,7 @@ type AuthenticationLoginReq struct {
 }
 
 type AuthenticationLogoutReq struct {
-	IDUser int
+	UserUUID string
 }
 
 type AuthenticationRequestResetTokenReq struct {
@@ -24,5 +24,5 @@ type AuthenticationResetPasswordReq struct {
 }
 
 type AuthenticationMeReq struct {
-	IDUser int
+	UserUUID string
 }

@@ -33,3 +33,20 @@ func (q *queryStruct) GetIDByUUID(table, uuid string) (id int) {
 	}
 	return
 }
+
+func (q *queryStruct) CheckExistingData(object_key, table, uuid string) (ruuid string) {
+	query := fmt.Sprintf(`
+		select t.uuid from %v t where t.uuid::text = '%v' limit 1
+	`, table, uuid)
+	sqlrows, err := infrastructure.SqlDB.Query(query)
+	if err != nil {
+		PanicIfNeeded(err)
+	}
+	err = scan.Row(&uuid, sqlrows)
+	if err != nil {
+		PanicIfNeeded(BadRequest{
+			Message: fmt.Sprintf("%v dengan id: %v tidak ditemukan.", object_key, uuid),
+		})
+	}
+	return
+}

@@ -54,11 +54,11 @@ func main() {
 	switch env.ENV {
 	case "dev":
 		docs.SwaggerInfo.Host = env.SERVER_HOST_BE
+		docs.SwaggerInfo.Schemes = []string{"https"}
 	default:
 		docs.SwaggerInfo.Host = env.SERVER_HOST + ":" + env.SERVER_PORT
+		docs.SwaggerInfo.Schemes = []string{"http"}
 	}
-
-	docs.SwaggerInfo.Schemes = []string{"https", "http"}
 
 	// fiber
 	fiberApp := fiber.New(config.NewFiberConfig())

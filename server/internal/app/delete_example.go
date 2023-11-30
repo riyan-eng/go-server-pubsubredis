@@ -16,7 +16,7 @@ import (
 // @Security ApiKeyAuth
 func (s *ServiceServer) DeleteExample(c *fiber.Ctx) error {
 	s.exampleService.Delete(dtoservice.DeleteExampleReq{
-		ID: util.NewQuery().GetIDByUUID("example", c.Params("id")),
+		UUID: util.NewQuery().CheckExistingData("example", "example", c.Params("id")),
 	})
 	return util.NewResponse(c).Success(nil, nil, util.MESSAGE_OK_DELETE)
 }

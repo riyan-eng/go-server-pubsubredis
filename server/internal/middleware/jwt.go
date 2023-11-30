@@ -31,12 +31,12 @@ func AuthorizeJwt() fiber.Handler {
 		if err := util.ValidateToken(claim, "access"); err != nil {
 			return util.NewResponse(c).Error(nil, util.MESSAGE_UNAUTHORIZED, fiber.StatusUnauthorized)
 		}
-		c.Locals("user_id", claim.UserID)
+		c.Locals("user_uuid", claim.UserUUID)
 		c.Locals("role_code", claim.RoleCode)
 
 		g := new(errgroup.Group)
 		g.Go(func() (err error) {
-			err = infrastructure.Redis.Expire(c.Context(), fmt.Sprintf("token-%s", claim.UserID), time.Minute*env.JWT_EXPIRED_LOGOFF).Err()
+			err = infrastructure.Redis.Expire(c.Context(), fmt.Sprintf("token-%s", claim.UserUUID), time.Minute*env.JWT_EXPIRED_LOGOFF).Err()
 			return
 		})
 		g.Wait()

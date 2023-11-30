@@ -23,7 +23,7 @@ func (s *ServiceServer) PatchExample(c *fiber.Ctx) error {
 	util.PanicIfNeeded(err)
 
 	s.exampleService.Patch(dtoservice.PatchExampleReq{
-		ID:     util.NewQuery().GetIDByUUID("example", c.Params("id")),
+		UUID:   util.NewQuery().CheckExistingData("example", "example", c.Params("id")),
 		Nama:   body.Nama,
 		Detail: body.Detail,
 	})

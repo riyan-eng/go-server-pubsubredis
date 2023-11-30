@@ -2,29 +2,23 @@ package util
 
 import (
 	"database/sql"
-	"errors"
+	"fmt"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/lib/pq"
 )
 
 func ErrorHandler(c *fiber.Ctx, err error) error {
-	var e *fiber.Error
-	code := fiber.StatusInternalServerError
-	if errors.As(err, &e) {
-		code = e.Code
-		c.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
-		return c.Status(code).SendString(err.Error())
-	}
-	// logger
 	log.Println(err)
 
-	// validation
+	// bad request
 	_, ok := err.(BadRequest)
 	if ok {
 		return NewResponse(c).Error(err.Error(), MESSAGE_BAD_REQUEST, fiber.StatusBadRequest)
 	}
 
+	// validation
 	_, ok = err.(ValidationError)
 	if ok {
 
@@ -34,6 +28,11 @@ func ErrorHandler(c *fiber.Ctx, err error) error {
 	// no data
 	if err == sql.ErrNoRows {
 		return NewResponse(c).Error(err.Error(), MESSAGE_NOT_FOUND, fiber.StatusBadRequest)
+	}
+
+	// duplicate
+	if StringNumToInt(fmt.Sprintf("%v", err.(*pq.Error).Code)) == 23505 {
+		return NewResponse(c).Error(err.Error(), MESSAGE_CONFLICT, fiber.StatusConflict)
 	}
 
 	return NewResponse(c).Error(err.Error(), MESSAGE_BAD_SYSTEM, fiber.StatusBadGateway)

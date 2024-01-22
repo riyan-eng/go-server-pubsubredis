@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./server
+    container_name: bootstrap-api
+    restart: unless-stopped
+    image: bootstrap-api
+    ports:
+      - 3001:3000
+    volumes:
+      - ./server/env.json:/app/env.json
+      - ./server/casbin.conf:/app/casbin.conf
+      - ./server/media:/app/media
+  subscriber:
+    build: ./subscriber
+    container_name: bootstrap-subscriber
+    restart: unless-stopped
+    image: bootstrap-subscriber
+    volumes:
+      - ./subscriber/env.json:/opt/env.json
+  migrator:
+    container_name: bootstrap-soda
+    image: riyaneng/soda:v1.0
+    volumes:
+      - ./migrator/migrations:/app/migrations
+      - ./migrator/database.yml:/app/database.yml
+networks:
+  default:
+    external:
+      name: local-bridge

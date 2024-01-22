@@ -32,6 +32,7 @@ func init() {
 	env.LoadEnvironmentFile()
 	env.NewEnvironment()
 	infrastructure.ConnectSqlDB()
+	infrastructure.ConnectSqlxDB()
 	infrastructure.ConnectGormDB()
 	infrastructure.ConnRedis()
 	os.Setenv("TZ", env.SERVER_TIMEZONE)

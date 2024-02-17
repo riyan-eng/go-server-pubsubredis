@@ -1,8 +1,8 @@
 package app
 
 import (
-	dtoservice "server/internal/dto_service"
-	httprequest "server/pkg/http.request"
+	"server/internal/dto"
+	"server/internal/entity"
 	"server/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,10 +13,10 @@ import (
 // @Tags       	Authentication
 // @Accept		json
 // @Produce		json
-// @Param       body	body  httprequest.AuthenticationRefreshToken	true  "body"
+// @Param       body	body  dto.AuthenticationRefreshToken	true  "body"
 // @Router		/auth/refresh_token/ [post]
 func (s *ServiceServer) RefreshToken(c *fiber.Ctx) error {
-	body := new(httprequest.AuthenticationRefreshToken)
+	body := new(dto.AuthenticationRefreshToken)
 	err := c.BodyParser(&body)
 	util.PanicIfNeeded(err)
 	err, errors := riyanisgood.NewValidation().ValidateStruct(*body)
@@ -24,7 +24,7 @@ func (s *ServiceServer) RefreshToken(c *fiber.Ctx) error {
 		return util.NewResponse(c).Error(errors, util.MESSAGE_FAILED_VALIDATION, fiber.StatusBadRequest)
 	}
 
-	service := s.authService.RefreshToken(dtoservice.AuthenticationRefreshTokenReq{
+	service := s.authService.RefreshToken(entity.AuthenticationRefreshTokenReq{
 		RefreshToken: body.RefreshToken,
 		Issuer:       string(c.Request().Host()),
 	})

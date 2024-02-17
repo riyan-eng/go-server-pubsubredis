@@ -1,4 +1,4 @@
-package httprequest
+package dto
 
 type CreateExample struct {
 	Nama   string `json:"nama" valid:"required"`

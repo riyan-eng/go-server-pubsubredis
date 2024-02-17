@@ -4,7 +4,7 @@ import (
 	"database/sql"
 
 	dtorepository "server/internal/dto_repository"
-	dtoservice "server/internal/dto_service"
+	"server/internal/entity"
 	"server/internal/model"
 	"server/internal/repository"
 	"server/pkg/util"
@@ -13,12 +13,12 @@ import (
 )
 
 type ObjectService interface {
-	List(dtoservice.ListObjectReq) dtoservice.ListObjectRes
-	Create(dtoservice.CreateObjectReq)
-	Delete(dtoservice.DeleteObjectReq)
-	Detail(dtoservice.DetailObjectReq) dtoservice.DetailObjectRes
-	Put(dtoservice.PutObjectReq)
-	Patch(dtoservice.PatchObjectReq)
+	List(entity.ListObjectReq) entity.ListObjectRes
+	Create(entity.CreateObjectReq)
+	Delete(entity.DeleteObjectReq)
+	Detail(entity.DetailObjectReq) entity.DetailObjectRes
+	Put(entity.PutObjectReq)
+	Patch(entity.PatchObjectReq)
 }
 
 type objectService struct {
@@ -31,7 +31,7 @@ func NewObjectService(dao repository.DAO) ObjectService {
 	}
 }
 
-func (t *objectService) List(req dtoservice.ListObjectReq) (res dtoservice.ListObjectRes) {
+func (t *objectService) List(req entity.ListObjectReq) (res entity.ListObjectRes) {
 	sqlrows := t.dao.NewObjectQuery().List(dtorepository.ListObjectReq{
 		Search: req.Search,
 		Limit:  req.Limit,
@@ -47,7 +47,7 @@ func (t *objectService) List(req dtoservice.ListObjectReq) (res dtoservice.ListO
 	return
 }
 
-func (t *objectService) Create(req dtoservice.CreateObjectReq) {
+func (t *objectService) Create(req entity.CreateObjectReq) {
 	item := model.Object{
 		UUID:     req.UUID,
 		Bucket:   sql.NullString{String: req.Bukcet, Valid: util.ValidIsNotBlankString(req.Bukcet)},
@@ -62,13 +62,13 @@ func (t *objectService) Create(req dtoservice.CreateObjectReq) {
 	})
 }
 
-func (t *objectService) Delete(req dtoservice.DeleteObjectReq) {
+func (t *objectService) Delete(req entity.DeleteObjectReq) {
 	t.dao.NewObjectQuery().Delete(dtorepository.DeleteObjectReq{
 		ID: req.ID,
 	})
 }
 
-func (t *objectService) Detail(req dtoservice.DetailObjectReq) (res dtoservice.DetailObjectRes) {
+func (t *objectService) Detail(req entity.DetailObjectReq) (res entity.DetailObjectRes) {
 	sqlrows := t.dao.NewObjectQuery().Detail(dtorepository.DetailObjectReq{
 		ID: req.ID,
 	})
@@ -78,7 +78,7 @@ func (t *objectService) Detail(req dtoservice.DetailObjectReq) (res dtoservice.D
 	return
 }
 
-func (t *objectService) Put(req dtoservice.PutObjectReq) {
+func (t *objectService) Put(req entity.PutObjectReq) {
 	item := model.Object{
 		ID: req.ID,
 		// Nama: req.Nama,
@@ -88,7 +88,7 @@ func (t *objectService) Put(req dtoservice.PutObjectReq) {
 	})
 }
 
-func (t *objectService) Patch(req dtoservice.PatchObjectReq) {
+func (t *objectService) Patch(req entity.PatchObjectReq) {
 	item := model.Object{
 		ID: req.ID,
 		// Nama: req.Nama,

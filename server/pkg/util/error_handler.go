@@ -2,11 +2,9 @@ package util
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/lib/pq"
 )
 
 func ErrorHandler(c *fiber.Ctx, err error) error {
@@ -31,9 +29,9 @@ func ErrorHandler(c *fiber.Ctx, err error) error {
 	}
 
 	// duplicate
-	if StringNumToInt(fmt.Sprintf("%v", err.(*pq.Error).Code)) == 23505 {
-		return NewResponse(c).Error(err.Error(), MESSAGE_CONFLICT, fiber.StatusConflict)
-	}
+	// if StringNumToInt(fmt.Sprintf("%v", err.(*pq.Error).Code)) == 23505 {
+	// 	return NewResponse(c).Error(err.Error(), MESSAGE_CONFLICT, fiber.StatusConflict)
+	// }
 
 	return NewResponse(c).Error(err.Error(), MESSAGE_BAD_SYSTEM, fiber.StatusBadGateway)
 }

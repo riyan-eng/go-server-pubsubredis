@@ -1,8 +1,8 @@
 package app
 
 import (
-	dtoservice "server/internal/dto_service"
-	httprequest "server/pkg/http.request"
+	"server/internal/dto"
+	"server/internal/entity"
 	"server/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,10 +13,10 @@ import (
 // @Tags       	Authentication
 // @Accept		json
 // @Produce		json
-// @Param       body	body  httprequest.AuthenticationRequestResetToken	true  "body"
+// @Param       body	body  dto.AuthenticationRequestResetToken	true  "body"
 // @Router		/auth/request_reset_token/ [post]
 func (s *ServiceServer) RequestResetToken(c *fiber.Ctx) error {
-	body := new(httprequest.AuthenticationRequestResetToken)
+	body := new(dto.AuthenticationRequestResetToken)
 	err := c.BodyParser(&body)
 	util.PanicIfNeeded(err)
 	err, errors := riyanisgood.NewValidation().ValidateStruct(*body)
@@ -24,7 +24,7 @@ func (s *ServiceServer) RequestResetToken(c *fiber.Ctx) error {
 		return util.NewResponse(c).Error(errors, util.MESSAGE_FAILED_VALIDATION, fiber.StatusBadRequest)
 	}
 
-	s.authService.RequestResetToken(dtoservice.AuthenticationRequestResetToken{
+	s.authService.RequestResetToken(entity.AuthenticationRequestResetToken{
 		Email:  body.Email,
 		Issuer: string(c.Request().Host()),
 	})

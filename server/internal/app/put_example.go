@@ -1,8 +1,8 @@
 package app
 
 import (
-	dtoservice "server/internal/dto_service"
-	httprequest "server/pkg/http.request"
+	"server/internal/dto"
+	"server/internal/entity"
 	"server/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,16 +13,16 @@ import (
 // @Accept		json
 // @Produce		json
 // @Param       id		path	string				true	"id"
-// @Param       body	body	httprequest.PutExample	true	"body"
+// @Param       body	body	dto.PutExample	true	"body"
 // @Router      /example/{id}/ [put]
 // @Security ApiKeyAuth
 func (s *ServiceServer) PutExample(c *fiber.Ctx) error {
 	// parse & validate
-	body := new(httprequest.PutExample)
+	body := new(dto.PutExample)
 	err := c.BodyParser(&body)
 	util.PanicIfNeeded(err)
 
-	s.exampleService.Put(dtoservice.PutExampleReq{
+	s.exampleService.Put(entity.PutExampleReq{
 		UUID:   util.NewQuery().CheckExistingData("example", "example", c.Params("id")),
 		Nama:   body.Nama,
 		Detail: body.Detail,

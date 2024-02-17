@@ -8,7 +8,7 @@ import (
 	"server/env"
 	"server/internal/datastruct"
 	dtorepository "server/internal/dto_repository"
-	dtoservice "server/internal/dto_service"
+	"server/internal/entity"
 	"server/internal/model"
 	"server/internal/repository"
 	"server/pkg/util"
@@ -17,14 +17,14 @@ import (
 )
 
 type AuthenticationService interface {
-	RefreshToken(req dtoservice.AuthenticationRefreshTokenReq) (res dtoservice.AuthenticationRefreshTokenRes)
-	ResetPassword(req dtoservice.AuthenticationResetPasswordReq)
-	Login(req dtoservice.AuthenticationLoginReq) (res dtoservice.AuthenticationLoginRes)
-	Register(req dtoservice.AuthenticationRegisterReq)
-	Logout(req dtoservice.AuthenticationLogoutReq)
-	Me(req dtoservice.AuthenticationMeReq) (res dtoservice.AuthenticationMeRes)
-	RequestResetToken(req dtoservice.AuthenticationRequestResetToken)
-	ValidateResetToken(req dtoservice.AuthenticationValidateResetTokenReq)
+	RefreshToken(req entity.AuthenticationRefreshTokenReq) (res entity.AuthenticationRefreshTokenRes)
+	ResetPassword(req entity.AuthenticationResetPasswordReq)
+	Login(req entity.AuthenticationLoginReq) (res entity.AuthenticationLoginRes)
+	Register(req entity.AuthenticationRegisterReq)
+	Logout(req entity.AuthenticationLogoutReq)
+	Me(req entity.AuthenticationMeReq) (res entity.AuthenticationMeRes)
+	RequestResetToken(req entity.AuthenticationRequestResetToken)
+	ValidateResetToken(req entity.AuthenticationValidateResetTokenReq)
 }
 
 type authenticationService struct {
@@ -37,7 +37,7 @@ func NewAuthenticationService(dao repository.DAO) AuthenticationService {
 	}
 }
 
-func (a *authenticationService) RefreshToken(req dtoservice.AuthenticationRefreshTokenReq) (res dtoservice.AuthenticationRefreshTokenRes) {
+func (a *authenticationService) RefreshToken(req entity.AuthenticationRefreshTokenReq) (res entity.AuthenticationRefreshTokenRes) {
 	claim, err := util.ParseToken(req.RefreshToken, env.JWT_SECRET_REFRESH)
 	if err != nil {
 		panic(util.BadRequest{
@@ -57,7 +57,7 @@ func (a *authenticationService) RefreshToken(req dtoservice.AuthenticationRefres
 	return
 }
 
-func (a *authenticationService) ResetPassword(req dtoservice.AuthenticationResetPasswordReq) {
+func (a *authenticationService) ResetPassword(req entity.AuthenticationResetPasswordReq) {
 	claim, err := util.ParseToken(req.ResetToken, env.JWT_SECRET_RESET)
 	if err != nil {
 		panic(util.BadRequest{
@@ -86,7 +86,7 @@ func (a *authenticationService) ResetPassword(req dtoservice.AuthenticationReset
 	})
 }
 
-func (a *authenticationService) Login(req dtoservice.AuthenticationLoginReq) (res dtoservice.AuthenticationLoginRes) {
+func (a *authenticationService) Login(req entity.AuthenticationLoginReq) (res entity.AuthenticationLoginRes) {
 	sqlRows := a.dao.NewAuthenticationQuery().Login(dtorepository.AuthenticationLoginReq{
 		Email: req.Email,
 	})
@@ -118,7 +118,7 @@ func (a *authenticationService) Login(req dtoservice.AuthenticationLoginReq) (re
 	return
 }
 
-func (a *authenticationService) Register(req dtoservice.AuthenticationRegisterReq) {
+func (a *authenticationService) Register(req entity.AuthenticationRegisterReq) {
 	password := util.GenerateHash(req.Password)
 	tabelUser := model.User{
 		UUID:     req.UUIDUser,
@@ -140,13 +140,13 @@ func (a *authenticationService) Register(req dtoservice.AuthenticationRegisterRe
 	})
 }
 
-func (a *authenticationService) Logout(req dtoservice.AuthenticationLogoutReq) {
+func (a *authenticationService) Logout(req entity.AuthenticationLogoutReq) {
 	a.dao.NewAuthenticationQuery().Logout(dtorepository.AuthenticationLogoutReq{
 		UserUUID: req.UserUUID,
 	})
 }
 
-func (a *authenticationService) Me(req dtoservice.AuthenticationMeReq) (res dtoservice.AuthenticationMeRes) {
+func (a *authenticationService) Me(req entity.AuthenticationMeReq) (res entity.AuthenticationMeRes) {
 	sqlRows := a.dao.NewAuthenticationQuery().Me(dtorepository.AuthenticationMeReq{
 		UserUUID: req.UserUUID,
 	})
@@ -156,7 +156,7 @@ func (a *authenticationService) Me(req dtoservice.AuthenticationMeReq) (res dtos
 	return
 }
 
-func (a *authenticationService) RequestResetToken(req dtoservice.AuthenticationRequestResetToken) {
+func (a *authenticationService) RequestResetToken(req entity.AuthenticationRequestResetToken) {
 	var user datastruct.AuthenticationRequestResetToken
 	sqlrows := a.dao.NewAuthenticationQuery().RequestResetToken(dtorepository.AuthenticationRequestResetTokenReq{
 		Email: req.Email,
@@ -182,7 +182,7 @@ func (a *authenticationService) RequestResetToken(req dtoservice.AuthenticationR
 
 }
 
-func (a *authenticationService) ValidateResetToken(req dtoservice.AuthenticationValidateResetTokenReq) {
+func (a *authenticationService) ValidateResetToken(req entity.AuthenticationValidateResetTokenReq) {
 	claim, err := util.ParseToken(req.ResetToken, env.JWT_SECRET_RESET)
 	if err != nil {
 		panic(util.BadRequest{

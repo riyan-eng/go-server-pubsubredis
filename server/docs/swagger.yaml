@@ -1,17 +1,17 @@
 definitions:
-  httprequest.AuthenticationLogin:
+  dto.AuthenticationLogin:
     properties:
       email:
         type: string
       password:
         type: string
     type: object
-  httprequest.AuthenticationRefreshToken:
+  dto.AuthenticationRefreshToken:
     properties:
       token:
         type: string
     type: object
-  httprequest.AuthenticationRegister:
+  dto.AuthenticationRegister:
     properties:
       email:
         type: string
@@ -24,38 +24,38 @@ definitions:
       password:
         type: string
     type: object
-  httprequest.AuthenticationRequestResetToken:
+  dto.AuthenticationRequestResetToken:
     properties:
       email:
         type: string
     type: object
-  httprequest.AuthenticationResetPassword:
+  dto.AuthenticationResetPassword:
     properties:
       password:
         type: string
       token:
         type: string
     type: object
-  httprequest.AuthenticationValidateResetToken:
+  dto.AuthenticationValidateResetToken:
     properties:
       token:
         type: string
     type: object
-  httprequest.CreateExample:
+  dto.CreateExample:
     properties:
       detail:
         type: string
       nama:
         type: string
     type: object
-  httprequest.PatchExample:
+  dto.PatchExample:
     properties:
       detail:
         type: string
       nama:
         type: string
     type: object
-  httprequest.PutExample:
+  dto.PutExample:
     properties:
       detail:
         type: string
@@ -75,7 +75,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/httprequest.AuthenticationLogin'
+          $ref: '#/definitions/dto.AuthenticationLogin'
       produces:
       - application/json
       responses: {}
@@ -112,7 +112,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/httprequest.AuthenticationRefreshToken'
+          $ref: '#/definitions/dto.AuthenticationRefreshToken'
       produces:
       - application/json
       responses: {}
@@ -129,7 +129,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/httprequest.AuthenticationRegister'
+          $ref: '#/definitions/dto.AuthenticationRegister'
       produces:
       - application/json
       responses: {}
@@ -146,7 +146,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/httprequest.AuthenticationRequestResetToken'
+          $ref: '#/definitions/dto.AuthenticationRequestResetToken'
       produces:
       - application/json
       responses: {}
@@ -163,7 +163,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/httprequest.AuthenticationResetPassword'
+          $ref: '#/definitions/dto.AuthenticationResetPassword'
       produces:
       - application/json
       responses: {}
@@ -180,7 +180,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/httprequest.AuthenticationValidateResetToken'
+          $ref: '#/definitions/dto.AuthenticationValidateResetToken'
       produces:
       - application/json
       responses: {}
@@ -236,7 +236,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/httprequest.CreateExample'
+          $ref: '#/definitions/dto.CreateExample'
       produces:
       - application/json
       responses: {}
@@ -294,7 +294,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/httprequest.PatchExample'
+          $ref: '#/definitions/dto.PatchExample'
       produces:
       - application/json
       responses: {}
@@ -317,7 +317,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/httprequest.PutExample'
+          $ref: '#/definitions/dto.PutExample'
       produces:
       - application/json
       responses: {}
@@ -336,7 +336,7 @@ paths:
         name: body
         required: true
         schema:
-          $ref: '#/definitions/httprequest.CreateExample'
+          $ref: '#/definitions/dto.CreateExample'
       produces:
       - application/json
       responses: {}

@@ -1,4 +1,4 @@
-package dtoservice
+package entity
 
 import "server/internal/datastruct"
 

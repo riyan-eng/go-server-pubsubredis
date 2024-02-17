@@ -4,7 +4,7 @@ import (
 	"database/sql"
 
 	dtorepository "server/internal/dto_repository"
-	dtoservice "server/internal/dto_service"
+	"server/internal/entity"
 	"server/internal/model"
 	"server/internal/repository"
 	"server/pkg/util"
@@ -15,14 +15,14 @@ import (
 )
 
 type ExampleService interface {
-	List(dtoservice.ListExampleReq) dtoservice.ListExampleRes
-	Create(dtoservice.CreateExampleReq)
-	Delete(dtoservice.DeleteExampleReq)
-	Detail(dtoservice.DetailExampleReq) dtoservice.DetailExampleRes
-	Put(dtoservice.PutExampleReq)
-	Patch(dtoservice.PatchExampleReq)
-	Template() dtoservice.TemplateExampleRes
-	Import(dtoservice.ImportExampleReq)
+	List(entity.ListExampleReq) entity.ListExampleRes
+	Create(entity.CreateExampleReq)
+	Delete(entity.DeleteExampleReq)
+	Detail(entity.DetailExampleReq) entity.DetailExampleRes
+	Put(entity.PutExampleReq)
+	Patch(entity.PatchExampleReq)
+	Template() entity.TemplateExampleRes
+	Import(entity.ImportExampleReq)
 }
 
 type exampleService struct {
@@ -35,7 +35,7 @@ func NewExampleService(dao repository.DAO) ExampleService {
 	}
 }
 
-func (t *exampleService) List(req dtoservice.ListExampleReq) (res dtoservice.ListExampleRes) {
+func (t *exampleService) List(req entity.ListExampleReq) (res entity.ListExampleRes) {
 	sqlrows := t.dao.NewExampleQuery().List(dtorepository.ListExampleReq{
 		Search: req.Search,
 		Limit:  req.Limit,
@@ -51,7 +51,7 @@ func (t *exampleService) List(req dtoservice.ListExampleReq) (res dtoservice.Lis
 	return
 }
 
-func (t *exampleService) Create(req dtoservice.CreateExampleReq) {
+func (t *exampleService) Create(req entity.CreateExampleReq) {
 	item := model.Example{
 		UUID:   uuid.NewString(),
 		Nama:   sql.NullString{String: req.Nama, Valid: util.ValidIsNotBlankString(req.Nama)},
@@ -62,13 +62,13 @@ func (t *exampleService) Create(req dtoservice.CreateExampleReq) {
 	})
 }
 
-func (t *exampleService) Delete(req dtoservice.DeleteExampleReq) {
+func (t *exampleService) Delete(req entity.DeleteExampleReq) {
 	t.dao.NewExampleQuery().Delete(dtorepository.DeleteExampleReq{
 		UUID: req.UUID,
 	})
 }
 
-func (t *exampleService) Detail(req dtoservice.DetailExampleReq) (res dtoservice.DetailExampleRes) {
+func (t *exampleService) Detail(req entity.DetailExampleReq) (res entity.DetailExampleRes) {
 	sqlrows := t.dao.NewExampleQuery().Detail(dtorepository.DetailExampleReq{
 		UUID: req.UUID,
 	})
@@ -77,7 +77,7 @@ func (t *exampleService) Detail(req dtoservice.DetailExampleReq) (res dtoservice
 	return
 }
 
-func (t *exampleService) Put(req dtoservice.PutExampleReq) {
+func (t *exampleService) Put(req entity.PutExampleReq) {
 	item := model.Example{
 		UUID: req.UUID,
 		Nama: sql.NullString{String: req.Nama, Valid: util.ValidIsNotBlankString(req.Nama)},
@@ -87,7 +87,7 @@ func (t *exampleService) Put(req dtoservice.PutExampleReq) {
 	})
 }
 
-func (t *exampleService) Patch(req dtoservice.PatchExampleReq) {
+func (t *exampleService) Patch(req entity.PatchExampleReq) {
 	item := model.Example{
 		UUID: req.UUID,
 		Nama: sql.NullString{String: req.Nama, Valid: util.ValidIsNotBlankString(req.Nama)},
@@ -97,7 +97,7 @@ func (t *exampleService) Patch(req dtoservice.PatchExampleReq) {
 	})
 }
 
-func (t *exampleService) Template() (res dtoservice.TemplateExampleRes) {
+func (t *exampleService) Template() (res entity.TemplateExampleRes) {
 	f, err := excelize.OpenFile("./media/excel/Template Example.xlsx")
 	if err != nil {
 		util.PanicIfNeeded(err)
@@ -114,7 +114,7 @@ func (t *exampleService) Template() (res dtoservice.TemplateExampleRes) {
 	return
 }
 
-func (t *exampleService) Import(req dtoservice.ImportExampleReq) {
+func (t *exampleService) Import(req entity.ImportExampleReq) {
 	var items []model.Example
 	for _, i := range req.Items {
 		items = append(items, model.Example{

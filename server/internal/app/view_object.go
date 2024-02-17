@@ -1,7 +1,7 @@
 package app
 
 import (
-	dtoservice "server/internal/dto_service"
+	"server/internal/entity"
 	"server/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,7 +16,7 @@ import (
 // @Router      /object/{bucket}/{id}/view [get]
 // @Security ApiKeyAuth
 func (s *ServiceServer) ViewObject(c *fiber.Ctx) error {
-	service := s.objectService.Detail(dtoservice.DetailObjectReq{
+	service := s.objectService.Detail(entity.DetailObjectReq{
 		ID: util.NewQuery().GetIDByUUID("objects", c.Params("id")),
 	})
 	c.Response().Header.SetContentType(service.Item.MimeType)

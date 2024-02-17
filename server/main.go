@@ -1,17 +1,16 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"os"
 	"runtime"
-
 	"server/config"
+	"server/docs"
 	"server/env"
 	"server/infrastructure"
 	"server/internal/repository"
 	"server/internal/route"
 	"server/internal/service"
-	"server/pkg/docs"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -51,15 +50,6 @@ func main() {
 
 	// swagger
 	docs.SwaggerInfo.Title = "Golang Boilerplate One"
-	fmt.Println(env.ENV)
-	switch env.ENV {
-	case "dev":
-		docs.SwaggerInfo.Host = env.SERVER_HOST_BE
-		docs.SwaggerInfo.Schemes = []string{"https"}
-	default:
-		docs.SwaggerInfo.Host = env.SERVER_HOST + ":" + env.SERVER_PORT
-		docs.SwaggerInfo.Schemes = []string{"http"}
-	}
 
 	// fiber
 	fiberApp := fiber.New(config.NewFiberConfig())
@@ -69,7 +59,19 @@ func main() {
 	fiberApp.Get("/", func(c *fiber.Ctx) error { return c.SendString("Welcome to Golang Boilerplate One APIs") })
 	fiberApp.Get("/metrics", monitor.New())
 	fiberApp.Get("/docs/*", swagger.New(config.NewSwaggerConfig()))
-
 	route.NewRoute(fiberApp, exampleService, authenticationService, objectService)
-	fiberApp.Listen(env.SERVER_HOST + ":" + env.SERVER_PORT)
+	if err := fiberApp.Listen(env.SERVER_HOST + ":" + env.SERVER_PORT); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
+
+	// mux := http.NewServeMux()
+	// // route.NewRouteMux(mux, exampleService, authenticationService, objectService)
+	// mux.HandleFunc("POST /", func(w http.ResponseWriter, r *http.Request) {
+
+	// 	fmt.Fprintf(w, "Welcome to the API home page!")
+	// })
+
+	// if err := http.ListenAndServe("localhost:8000", mux); err != nil {
+	// 	log.Fatalf("Failed start server; %v", err)
+	// }
 }

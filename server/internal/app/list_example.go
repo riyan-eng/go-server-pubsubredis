@@ -1,8 +1,8 @@
 package app
 
 import (
-	dtoservice "server/internal/dto_service"
-	httprequest "server/pkg/http.request"
+	"server/internal/dto"
+	"server/internal/entity"
 	"server/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,13 +18,13 @@ import (
 // @Router       /example/ [get]
 // @Security ApiKeyAuth
 func (s *ServiceServer) ListExample(c *fiber.Ctx) error {
-	queryParam := new(httprequest.PaginationReq).Init()
+	queryParam := new(dto.PaginationReq).Init()
 	err := c.QueryParser(&queryParam)
 	util.PanicIfNeeded(err)
 
 	pageMeta := util.NewPagination().GetPageMeta(queryParam.Page, queryParam.Limit)
 
-	service := s.exampleService.List(dtoservice.ListExampleReq{
+	service := s.exampleService.List(entity.ListExampleReq{
 		Search: queryParam.Search,
 		Order:  queryParam.Order,
 		Limit:  pageMeta.Limit,

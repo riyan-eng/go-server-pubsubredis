@@ -1,7 +1,7 @@
 package app
 
 import (
-	dtoservice "server/internal/dto_service"
+	"server/internal/entity"
 	"server/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
@@ -14,7 +14,7 @@ import (
 // @Security ApiKeyAuth
 func (s *ServiceServer) Logout(c *fiber.Ctx) error {
 	userUUID := c.Locals("user_uuid").(string)
-	s.authService.Logout(dtoservice.AuthenticationLogoutReq{
+	s.authService.Logout(entity.AuthenticationLogoutReq{
 		UserUUID: userUUID,
 	})
 	return util.NewResponse(c).Success(nil, nil, util.MESSAGE_OK_LOGOUT)

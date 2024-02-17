@@ -1,8 +1,8 @@
 package app
 
 import (
-	dtoservice "server/internal/dto_service"
-	httprequest "server/pkg/http.request"
+	"server/internal/dto"
+	"server/internal/entity"
 	"server/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
@@ -14,10 +14,10 @@ import (
 // @Tags       	Authentication
 // @Accept		json
 // @Produce		json
-// @Param       body	body  httprequest.AuthenticationRegister	true  "body"
+// @Param       body	body  dto.AuthenticationRegister	true  "body"
 // @Router		/auth/register/ [post]
 func (s *ServiceServer) Register(c *fiber.Ctx) error {
-	body := new(httprequest.AuthenticationRegister)
+	body := new(dto.AuthenticationRegister)
 	err := c.BodyParser(&body)
 	util.PanicIfNeeded(err)
 	err, errors := riyanisgood.NewValidation().ValidateStruct(*body)
@@ -25,7 +25,7 @@ func (s *ServiceServer) Register(c *fiber.Ctx) error {
 		return util.NewResponse(c).Error(errors, util.MESSAGE_FAILED_VALIDATION, fiber.StatusBadRequest)
 	}
 
-	s.authService.Register(dtoservice.AuthenticationRegisterReq{
+	s.authService.Register(entity.AuthenticationRegisterReq{
 		UUIDUser:     uuid.NewString(),
 		UUIDUserData: uuid.NewString(),
 		Nama:         body.Nama,

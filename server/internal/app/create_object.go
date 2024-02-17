@@ -1,7 +1,7 @@
 package app
 
 import (
-	dtoservice "server/internal/dto_service"
+	"server/internal/entity"
 	"server/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,14 +11,14 @@ import (
 // @Tags        Object
 // @Accept		json
 // @Produce		json
-// @Param       body	body  httprequest.CreateExample	true  "body"
+// @Param       body	body  dto.CreateExample	true  "body"
 // @Router		/object/ [post]
 // @Security ApiKeyAuth
 func (s *ServiceServer) CreateObject(c *fiber.Ctx) error {
 	file, err := c.FormFile("file")
 	util.PanicIfNeeded(err)
 	fileMeta := util.NewFile().SaveLocal(c, file, "default_private")
-	s.objectService.Create(dtoservice.CreateObjectReq{
+	s.objectService.Create(entity.CreateObjectReq{
 		UUID:     fileMeta.UUID,
 		Bukcet:   "default_private",
 		Nama:     fileMeta.Nama,

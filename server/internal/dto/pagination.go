@@ -1,8 +1,8 @@
-package httprequest
+package dto
 
 type PaginationReq struct {
-	Page   int `query:"page"`
-	Limit  int `query:"per_page"`
+	Page   int    `query:"page"`
+	Limit  int    `query:"per_page"`
 	Search string `query:"search"`
 	Order  string `query:"order"`
 }

@@ -1,7 +1,7 @@
 package app
 
 import (
-	dtoservice "server/internal/dto_service"
+	"server/internal/entity"
 	"server/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
@@ -15,7 +15,7 @@ import (
 // @Router      /example/{id}/ [delete]
 // @Security ApiKeyAuth
 func (s *ServiceServer) DeleteExample(c *fiber.Ctx) error {
-	s.exampleService.Delete(dtoservice.DeleteExampleReq{
+	s.exampleService.Delete(entity.DeleteExampleReq{
 		UUID: util.NewQuery().CheckExistingData("example", "example", c.Params("id")),
 	})
 	return util.NewResponse(c).Success(nil, nil, util.MESSAGE_OK_DELETE)

@@ -1,8 +1,8 @@
 package app
 
 import (
-	dtoservice "server/internal/dto_service"
-	httprequest "server/pkg/http.request"
+	"server/internal/dto"
+	"server/internal/entity"
 	"server/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
@@ -13,16 +13,16 @@ func (s *ServiceServer) ImportExample(c *fiber.Ctx) error {
 	if err != nil {
 		util.PanicIfNeeded(util.BadRequest{Message: "tidak ada file yang diunggah terkait dengan key yang diberikan"})
 	}
-	body := util.ReadImportExcel[[]httprequest.ImportExample](file)
-	var items []dtoservice.ImportExampleItemReq
+	body := util.ReadImportExcel[[]dto.ImportExample](file)
+	var items []entity.ImportExampleItemReq
 	for _, i := range body {
-		items = append(items, dtoservice.ImportExampleItemReq{
+		items = append(items, entity.ImportExampleItemReq{
 			Nama:   i.Nama,
 			Detail: i.Detail,
 		})
 	}
 
-	s.exampleService.Import(dtoservice.ImportExampleReq{
+	s.exampleService.Import(entity.ImportExampleReq{
 		Items: items,
 	})
 

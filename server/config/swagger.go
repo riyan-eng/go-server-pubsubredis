@@ -6,10 +6,6 @@ import (
 	"github.com/gofiber/swagger"
 )
 
-var css string = `
-h2 { color: purple }
-`
-
 func NewSwaggerConfig() swagger.Config {
 	return swagger.Config{
 		Title:  "Golang",
@@ -26,11 +22,6 @@ func NewSwaggerConfig() swagger.Config {
 		DefaultModelExpandDepth:  1,
 		DefaultModelRendering:    "example",
 		DocExpansion:             "list",
-		SyntaxHighlight: &swagger.SyntaxHighlightConfig{
-			Activate: true,
-			Theme:    "obsidian",
-		},
-		ShowMutatedRequest: true,
+		ShowMutatedRequest:       true,
 	}
 }
-

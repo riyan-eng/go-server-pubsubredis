@@ -3,7 +3,7 @@ package app
 import (
 	"fmt"
 
-	dtoservice "server/internal/dto_service"
+	"server/internal/entity"
 	"server/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
@@ -18,7 +18,7 @@ import (
 // @Router      /object/{bucket}/{id}/download [get]
 // @Security ApiKeyAuth
 func (s *ServiceServer) DownloadObject(c *fiber.Ctx) error {
-	service := s.objectService.Detail(dtoservice.DetailObjectReq{
+	service := s.objectService.Detail(entity.DetailObjectReq{
 		ID: util.NewQuery().GetIDByUUID("objects", c.Params("id")),
 	})
 	c.Response().Header.SetContentType("application/octet-stream")

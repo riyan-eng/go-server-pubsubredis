@@ -11,6 +11,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 var SqlDB *sql.DB
@@ -42,7 +43,9 @@ func ConnectGormDB() {
 	var err error
 	GormDB, err = gorm.Open(postgres.New(postgres.Config{
 		Conn: SqlDB,
-	}))
+	}), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Silent),
+	})
 	if err != nil {
 		fmt.Println("gorm database: can't connect to database")
 		os.Exit(1)
@@ -56,10 +59,10 @@ func ConnectSqlxDB() {
 	`, env.POSTGRE_HOST, env.POSTGRE_USERNAME, env.POSTGRE_PASSWORD, env.POSTGRE_DATABASE, env.POSTGRE_PORT, env.POSTGRE_TIMEZONE)
 	var err error
 	SqlxDB, err = sqlx.Connect("postgres", dsn)
-    if err != nil {
-        fmt.Println("sqlx database: can't connect to database")
+	if err != nil {
+		fmt.Println("sqlx database: can't connect to database")
 		os.Exit(1)
-    }
+	}
 	SqlxDB.SetMaxIdleConns(env.POSTGRE_CONN_MAX_IDLE)
 	SqlxDB.SetMaxOpenConns(env.POSTGRE_CONN_MAX_OPEN)
 	SqlxDB.SetConnMaxLifetime(time.Minute * env.POSTGRE_CONN_MAX_LIFETIME)

@@ -11,6 +11,10 @@ type CreateExampleReq struct {
 	Detail string
 }
 
+type CreateExampleRes struct {
+	Item datastruct.Example
+}
+
 type ListExampleReq struct {
 	Search string
 	Limit  int

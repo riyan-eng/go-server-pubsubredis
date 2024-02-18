@@ -1,7 +1,6 @@
 package util
 
 import (
-	"errors"
 	"math"
 )
 
@@ -57,7 +56,7 @@ func (p *paginationStruct) GetPageMeta(page, limit int) (meta pageMeta) {
 func (p *paginationStruct) GetTotalRows(data any) (total int) {
 	v, ok := data.([]interface{})
 	if !ok {
-		PanicIfNeeded(errors.New("failed on generating total rows"))
+		PanicIfNeeded("Failed on generating total rows.")
 	}
 	if len(v) != 0 {
 		total = 1

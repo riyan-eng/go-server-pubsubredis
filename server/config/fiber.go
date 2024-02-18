@@ -11,7 +11,7 @@ func NewFiberConfig() fiber.Config {
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
 	return fiber.Config{
 		ErrorHandler:  util.ErrorHandler,
-		Prefork:       false,
+		Prefork:       true,
 		CaseSensitive: true,
 		StrictRouting: true,
 		AppName:       "Test App v1.0.1",

@@ -16,7 +16,7 @@ import (
 
 type ExampleService interface {
 	List(entity.ListExampleReq) entity.ListExampleRes
-	Create(entity.CreateExampleReq)
+	Create(entity.CreateExampleReq) entity.CreateExampleRes
 	Delete(entity.DeleteExampleReq)
 	Detail(entity.DetailExampleReq) entity.DetailExampleRes
 	Put(entity.PutExampleReq)
@@ -51,15 +51,20 @@ func (t *exampleService) List(req entity.ListExampleReq) (res entity.ListExample
 	return
 }
 
-func (t *exampleService) Create(req entity.CreateExampleReq) {
+func (t *exampleService) Create(req entity.CreateExampleReq) (res entity.CreateExampleRes) {
+	newUUID := uuid.NewString()
 	item := model.Example{
-		UUID:   uuid.NewString(),
+		UUID:   newUUID,
 		Nama:   sql.NullString{String: req.Nama, Valid: util.ValidIsNotBlankString(req.Nama)},
 		Detail: sql.NullString{String: req.Detail, Valid: util.ValidIsNotBlankString(req.Detail)},
 	}
 	t.dao.NewExampleQuery().Create(dtorepository.CreateExampleReq{
 		Item: item,
 	})
+
+	detail := t.Detail(entity.DetailExampleReq{UUID: newUUID})
+	res.Item = detail.Item
+	return
 }
 
 func (t *exampleService) Delete(req entity.DeleteExampleReq) {

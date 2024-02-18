@@ -64,14 +64,4 @@ func main() {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 
-	// mux := http.NewServeMux()
-	// // route.NewRouteMux(mux, exampleService, authenticationService, objectService)
-	// mux.HandleFunc("POST /", func(w http.ResponseWriter, r *http.Request) {
-
-	// 	fmt.Fprintf(w, "Welcome to the API home page!")
-	// })
-
-	// if err := http.ListenAndServe("localhost:8000", mux); err != nil {
-	// 	log.Fatalf("Failed start server; %v", err)
-	// }
 }

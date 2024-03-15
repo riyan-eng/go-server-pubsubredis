@@ -1,6 +1,7 @@
 package app
 
 import (
+	"server/infrastructure"
 	"server/internal/dto"
 	"server/internal/entity"
 	"server/pkg/util"
@@ -21,7 +22,7 @@ func (s *ServiceServer) RefreshToken(c *fiber.Ctx) error {
 	util.PanicIfNeeded(err)
 	err, errors := riyanisgood.NewValidation().ValidateStruct(*body)
 	if err != nil {
-		return util.NewResponse(c).Error(errors, util.MESSAGE_FAILED_VALIDATION, fiber.StatusBadRequest)
+		return util.NewResponse(c).Error(errors, infrastructure.Localize("OK_CREATE"), fiber.StatusBadRequest)
 	}
 
 	service := s.authService.RefreshToken(entity.AuthenticationRefreshTokenReq{
@@ -33,5 +34,5 @@ func (s *ServiceServer) RefreshToken(c *fiber.Ctx) error {
 		"refresh_token": service.RefreshToken,
 		"expired_at":    service.ExpiredAt.Time,
 	}
-	return util.NewResponse(c).Success(data, nil, util.MESSAGE_OK_REFRESH)
+	return util.NewResponse(c).Success(data, nil, infrastructure.Localize("OK_CREATE"))
 }

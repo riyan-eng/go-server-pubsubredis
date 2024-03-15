@@ -1,6 +1,7 @@
 package app
 
 import (
+	"server/infrastructure"
 	"server/internal/entity"
 	"server/pkg/util"
 
@@ -17,5 +18,5 @@ func (s *ServiceServer) Me(c *fiber.Ctx) error {
 	service := s.authService.Me(entity.AuthenticationMeReq{
 		UserUUID: userUUID,
 	})
-	return util.NewResponse(c).Success(service.Data, nil, util.MESSAGE_OK_READ)
+	return util.NewResponse(c).Success(service.Data, nil, infrastructure.Localize("OK_CREATE"))
 }

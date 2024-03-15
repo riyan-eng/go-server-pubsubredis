@@ -1,6 +1,7 @@
 package app
 
 import (
+	"server/infrastructure"
 	"server/internal/dto"
 	"server/internal/entity"
 	"server/pkg/util"
@@ -27,5 +28,5 @@ func (s *ServiceServer) PutExample(c *fiber.Ctx) error {
 		Nama:   body.Nama,
 		Detail: body.Detail,
 	})
-	return util.NewResponse(c).Success(nil, nil, util.MESSAGE_OK_UPDATE)
+	return util.NewResponse(c).Success(nil, nil, infrastructure.Localize("OK_CREATE"))
 }

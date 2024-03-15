@@ -1,6 +1,7 @@
 package app
 
 import (
+	"server/infrastructure"
 	"server/internal/dto"
 	"server/internal/entity"
 	"server/pkg/util"
@@ -21,11 +22,11 @@ func (s *ServiceServer) ValidateResetToken(c *fiber.Ctx) error {
 	util.PanicIfNeeded(err)
 	err, errors := riyanisgood.NewValidation().ValidateStruct(*body)
 	if err != nil {
-		return util.NewResponse(c).Error(errors, util.MESSAGE_FAILED_VALIDATION, fiber.StatusBadRequest)
+		return util.NewResponse(c).Error(errors, infrastructure.Localize("OK_CREATE"), fiber.StatusBadRequest)
 	}
 
 	s.authService.ValidateResetToken(entity.AuthenticationValidateResetTokenReq{
 		ResetToken: body.ResetToken,
 	})
-	return util.NewResponse(c).Success(nil, nil, "Valid")
+	return util.NewResponse(c).Success(nil, nil, infrastructure.Localize("OK_CREATE"))
 }

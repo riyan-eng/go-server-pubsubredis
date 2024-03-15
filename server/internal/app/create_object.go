@@ -1,6 +1,7 @@
 package app
 
 import (
+	"server/infrastructure"
 	"server/internal/entity"
 	"server/pkg/util"
 
@@ -30,5 +31,5 @@ func (s *ServiceServer) CreateObject(c *fiber.Ctx) error {
 	data := fiber.Map{
 		"url": fileMeta.Url,
 	}
-	return util.NewResponse(c).Success(data, nil, util.MESSAGE_OK_CREATE)
+	return util.NewResponse(c).Success(data, nil, infrastructure.Localize("OK_CREATE"))
 }

@@ -1,6 +1,7 @@
 package app
 
 import (
+	"server/infrastructure"
 	"server/internal/dto"
 	"server/internal/entity"
 	"server/pkg/util"
@@ -22,7 +23,7 @@ func (s *ServiceServer) Register(c *fiber.Ctx) error {
 	util.PanicIfNeeded(err)
 	err, errors := riyanisgood.NewValidation().ValidateStruct(*body)
 	if err != nil {
-		return util.NewResponse(c).Error(errors, util.MESSAGE_FAILED_VALIDATION, fiber.StatusBadRequest)
+		return util.NewResponse(c).Error(errors, infrastructure.Localize("OK_CREATE"), fiber.StatusBadRequest)
 	}
 
 	s.authService.Register(entity.AuthenticationRegisterReq{
@@ -35,5 +36,5 @@ func (s *ServiceServer) Register(c *fiber.Ctx) error {
 		NIK:          body.NIK,
 		NomorTelepon: body.NomorTelepon,
 	})
-	return util.NewResponse(c).Success(nil, nil, util.MESSAGE_OK_CREATE)
+	return util.NewResponse(c).Success(nil, nil, infrastructure.Localize("OK_CREATE"))
 }

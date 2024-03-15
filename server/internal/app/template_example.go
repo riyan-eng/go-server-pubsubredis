@@ -4,11 +4,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-// @Summary     Template
-// @Tags       	Example
+// @Summary     Example
+// @Tags       	Template
 // @Accept		json
 // @Produce		json
-// @Router      /example-template/ [get]
+// @Router      /template/example/ [get]
 // @Security ApiKeyAuth
 func (s *ServiceServer) TemplateExample(c *fiber.Ctx) error {
 	service := s.exampleService.Template()

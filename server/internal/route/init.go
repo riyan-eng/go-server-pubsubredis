@@ -8,30 +8,19 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func NewRoute(fiberApp *fiber.App,
+func SetupSubApp(fiberApp *fiber.App,
 	exampleService service.ExampleService,
 	authenticationService service.AuthenticationService,
 	objectService service.ObjectService,
 ) {
 	allHandler := app.NewService(exampleService, authenticationService, objectService)
 	enforcer := config.NewEnforcer()
-	ExampleRoute(fiberApp, allHandler, enforcer)
-	AuthenticationRoute(fiberApp, allHandler, enforcer)
-	ObjectRoute(fiberApp, allHandler, enforcer)
+
+	// mounting sub app
+	fiberApp.Mount("/", Index(allHandler, enforcer))
+	fiberApp.Mount("/example", Example(allHandler, enforcer))
+	fiberApp.Mount("/auth", Authentication(allHandler, enforcer))
+	fiberApp.Mount("/template", Template(allHandler, enforcer))
+	fiberApp.Mount("/import", Import(allHandler, enforcer))
+	fiberApp.Mount("/export", Export(allHandler, enforcer))
 }
-
-// func NewRouteMux(
-// 	mux *http.ServeMux,
-// 	exampleService service.ExampleService,
-// 	authenticationService service.AuthenticationService,
-// 	objectService service.ObjectService,
-// ) {
-// 	// apiMux := http.NewServeMux()
-// 	// apiMux.HandleFunc("/", ServeHTTP)
-// 	// apiMux.HandleFunc("/a", ServeHTTP2)
-// 	// mux.Handle("/api/", http.StripPrefix("/api", apiMux))
-
-// 	enforcer := config.NewEnforcer()
-// 	allHandler := app.NewService(exampleService, authenticationService, objectService)
-// 	ExampleRoute2(mux, allHandler, enforcer)
-// }

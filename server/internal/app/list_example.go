@@ -1,6 +1,7 @@
 package app
 
 import (
+	"server/infrastructure"
 	"server/internal/dto"
 	"server/internal/entity"
 	"server/pkg/util"
@@ -38,5 +39,5 @@ func (s *ServiceServer) ListExample(c *fiber.Ctx) error {
 		TotalPages: util.NewPagination().GetTotalPages(service.Total, pageMeta.Limit),
 	}
 
-	return util.NewResponse(c).Success(service.Items, meta, util.MESSAGE_OK_READ)
+	return util.NewResponse(c).Success(service.Items, meta, infrastructure.Localize("OK_CREATE"))
 }

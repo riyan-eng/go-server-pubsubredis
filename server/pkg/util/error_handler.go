@@ -1,57 +1,55 @@
 package util
 
 import (
-	"log"
+	"errors"
+	"server/infrastructure"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func ErrorHandler(c *fiber.Ctx, err error) error {
-	log.Println(err)
-
-	// bad request
-	_, ok := err.(BadRequest)
-	if ok {
-		return NewResponse(c).Error(
-			err.Error(),
-			MESSAGE_BAD_REQUEST,
-			fiber.StatusBadRequest,
-		)
+	code := fiber.StatusBadGateway
+	var e *fiber.Error
+	if errors.As(err, &e) {
+		code = e.Code
 	}
 
-	// duplicate
-	_, ok = err.(Duplicate)
-	if ok {
+	switch err := err.(type) {
+	case BadRequest:
 		return NewResponse(c).Error(
 			err.Error(),
-			MESSAGE_CONFLICT,
+			infrastructure.Localize("BAD_REQUEST"),
+			fiber.StatusBadRequest,
+		)
+	case Duplicate:
+		return NewResponse(c).Error(
+			err.Error(),
+			infrastructure.Localize("CONFLICT"),
 			fiber.StatusConflict,
 		)
-	}
-
-	// data not found
-	_, ok = err.(NoData)
-	if ok {
+	case NoData:
 		return NewResponse(c).Error(
 			err.Error(),
-			MESSAGE_NOT_FOUND,
+			infrastructure.Localize("NOT_FOUND"),
 			fiber.StatusBadRequest,
 		)
-	}
-
-	// body validation
-	tempError, ok := err.(BodyValidationError)
-	if ok {
+	// case BodyValidationError:
+	// 	return NewResponse(c).Error(
+	// 		err.ListError,
+	// 		infrastructure.Localize("FAILED_VALIDATION"),
+	// 		fiber.StatusBadRequest,
+	// 	)
+	case CustomBadRequest:
 		return NewResponse(c).Error(
-			tempError.ListError,
-			MESSAGE_FAILED_VALIDATION,
-			fiber.StatusBadRequest,
+			err.CustomError(),
+			err.Message(),
+			err.StatusCode(),
+		)
+	default:
+		return NewResponse(c).Error(
+			err.Error(),
+			infrastructure.Localize("BAD_SYSTEM"),
+			code,
 		)
 	}
-
-	return NewResponse(c).Error(
-		err.Error(),
-		MESSAGE_BAD_SYSTEM,
-		fiber.StatusBadGateway,
-	)
 }

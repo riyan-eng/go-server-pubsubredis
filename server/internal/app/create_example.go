@@ -1,12 +1,12 @@
 package app
 
 import (
+	"server/infrastructure"
 	"server/internal/dto"
 	"server/internal/entity"
 	"server/pkg/util"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/riyan-eng/riyanisgood"
 )
 
 // @Summary     Create
@@ -20,12 +20,12 @@ func (s *ServiceServer) CreateExample(c *fiber.Ctx) error {
 	body := new(dto.CreateExample)
 	err := c.BodyParser(&body)
 	util.PanicIfNeeded(err)
-	err, errors := riyanisgood.NewValidation().ValidateStruct(*body)
-	util.PanicBodyValidation(err, errors)
+	errors, err := util.NewValidation().ValidateStruct(*body)
+	util.PanicBodyValidation(errors, err)
 
 	service := s.exampleService.Create(entity.CreateExampleReq{
 		Nama:   body.Nama,
 		Detail: body.Detail,
 	})
-	return util.NewResponse(c).Success(service.Item, nil, util.MESSAGE_OK_CREATE, 201)
+	return util.NewResponse(c).Success(service.Item, nil, infrastructure.Localize("OK_CREATE"), 201)
 }

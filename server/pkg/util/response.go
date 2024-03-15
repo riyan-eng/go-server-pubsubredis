@@ -41,34 +41,6 @@ type ImportError struct {
 	Errors any `json:"error"`
 }
 
-const (
-	MESSAGE_OK_CREATE              = "Successfully inserted data."
-	MESSAGE_OK_DELETE              = "Successfully deleted data."
-	MESSAGE_OK_UPDATE              = "Successfully updated data."
-	MESSAGE_OK_READ                = "Successfully displayed data."
-	MESSAGE_OK_IMPORT              = "Successfully imported data."
-	MESSAGE_OK_EXPORT              = "Successfully exported data."
-	MESSAGE_OK_UPLOAD              = "Successfully uploaded data."
-	MESSAGE_OK_LOGIN               = "Successfully logged in."
-	MESSAGE_OK_REFRESH             = "Successfully refreshed token."
-	MESSAGE_OK_LOGOUT              = "Successfully logged out."
-	MESSAGE_OK_REQUEST_TOKEN_RESET = "Successfully requested token."
-	MESSAGE_OK_CHANGE_PASSWORD     = "Successfully updated password."
-	MESSAGE_FAILED_CREATE          = "Failed to insert data."
-	MESSAGE_FAILED_DELETE          = "Failed to delete data."
-	MESSAGE_FAILED_UPDATE          = "Failed to update data."
-	MESSAGE_FAILED_READ            = "Failed to display data."
-	MESSAGE_FAILED_IMPORT          = "Failed to import data."
-	MESSAGE_FAILED_EXPORT          = "Failed to export data."
-	MESSAGE_FAILED_VALIDATION      = "Failed to validate data."
-	MESSAGE_BAD_REQUEST            = "Bad request."
-	MESSAGE_BAD_SYSTEM             = "Server error."
-	MESSAGE_UNAUTHORIZED           = "Unauthorized."
-	MESSAGE_CONFLICT               = "Data already exists."
-	MESSAGE_NOT_FOUND              = "Data not found."
-	MESSAGE_FAILED_LOGIN           = "Incorrect username or password."
-)
-
 var statusMessages = map[int]string{
 	200: "OK",
 	201: "Created",
@@ -77,11 +49,40 @@ var statusMessages = map[int]string{
 	403: "Forbidden",
 	404: "Not Found",
 	405: "Method Not Allowed",
+	406: "Not Acceptable",
+	407: "Proxy Authentication Required",
+	408: "Request Timeout",
 	409: "Conflict",
+	410: "Gone",
+	411: "Length Required",
+	412: "Precondition Failed",
+	413: "Payload Too Large",
+	414: "URI Too Long",
 	415: "Unsupported Media Type",
+	416: "Range Not Satisfiable",
+	417: "Expectation Failed",
+	418: "I'm a teapot",
+	421: "Misdirected Request",
+	422: "Unprocessable Entity",
+	423: "Locked",
+	424: "Failed Dependency",
+	425: "Too Early",
+	426: "Upgrade Required",
+	428: "Precondition Required",
+	429: "Too Many Requests",
+	431: "Request Header Fields Too Large",
+	451: "Unavailable For Legal Reasons",
 	500: "Internal Server Error",
 	501: "Not Implemented",
 	502: "Bad Gateway",
+	503: "Service Unavailable",
+	504: "Gateway Timeout",
+	505: "HTTP Version Not Supported",
+	506: "Variant Also Negotiates",
+	507: "Insufficient Storage",
+	508: "Loop Detected",
+	510: "Not Extended",
+	511: "Network Authentication Required",
 }
 
 type repsonseInterface interface {
@@ -105,33 +106,30 @@ func (r *responseStruct) Success(data any, meta any, message string, statusCode 
 	if len(statusCode) > 0 {
 		code = statusCode[0]
 	}
-	response := Response{
-		Code:    code,
-		Message: statusMessages[code],
-	}
 	return r.fiberCtx.Status(code).JSON(SuccessResponse{
-		Data:     data,
-		Meta:     meta,
-		Message:  message,
-		Response: response,
+		Data:    data,
+		Meta:    meta,
+		Message: message,
+		Response: Response{
+			Code:    code,
+			Message: statusMessages[code],
+		},
 	})
 }
 
 func (r *responseStruct) Error(errors any, message string, statusCode int) error {
-	responseMessage := statusMessages[statusCode]
-	if responseMessage == "" {
+	responseMessage, exists := statusMessages[statusCode]
+	if !exists {
 		responseMessage = "Bad Gateway"
 	}
 
-	response := Response{
-		Code:    statusCode,
-		Message: responseMessage,
-	}
-
 	return r.fiberCtx.Status(statusCode).JSON(ErrorResponse{
-		Error:    errors,
-		Message:  message,
-		Response: response,
+		Error:   errors,
+		Message: message,
+		Response: Response{
+			Code:    statusCode,
+			Message: responseMessage,
+		},
 	})
 }
 

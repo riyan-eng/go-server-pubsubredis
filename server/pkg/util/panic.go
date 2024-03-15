@@ -1,6 +1,7 @@
 package util
 
 import (
+	"server/infrastructure"
 	"strings"
 
 	"github.com/lib/pq"
@@ -12,11 +13,11 @@ func PanicIfNeeded(err interface{}) {
 	}
 }
 
-func PanicBodyValidation(err error, listErr any) {
+func PanicBodyValidation(errors any, err error) {
 	if err != nil {
-		PanicIfNeeded(BodyValidationError{
-			Message:   MESSAGE_FAILED_VALIDATION,
-			ListError: listErr,
+		PanicIfNeeded(CustomBadRequest{
+			Errors:   errors,
+			Messages: infrastructure.Localize("FAILED_VALIDATION"),
 		})
 	}
 }

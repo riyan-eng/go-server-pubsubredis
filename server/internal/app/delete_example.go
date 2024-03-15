@@ -1,6 +1,7 @@
 package app
 
 import (
+	"server/infrastructure"
 	"server/internal/entity"
 	"server/pkg/util"
 
@@ -18,5 +19,5 @@ func (s *ServiceServer) DeleteExample(c *fiber.Ctx) error {
 	s.exampleService.Delete(entity.DeleteExampleReq{
 		UUID: util.NewQuery().CheckExistingData("example", "example", c.Params("id")),
 	})
-	return util.NewResponse(c).Success(nil, nil, util.MESSAGE_OK_DELETE)
+	return util.NewResponse(c).Success(nil, nil, infrastructure.Localize("OK_CREATE"))
 }

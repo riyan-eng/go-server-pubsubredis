@@ -50,12 +50,12 @@ func (t *objectService) List(req entity.ListObjectReq) (res entity.ListObjectRes
 func (t *objectService) Create(req entity.CreateObjectReq) {
 	item := model.Object{
 		UUID:     req.UUID,
-		Bucket:   sql.NullString{String: req.Bukcet, Valid: util.ValidIsNotBlankString(req.Bukcet)},
-		Nama:     sql.NullString{String: req.Nama, Valid: util.ValidIsNotBlankString(req.Nama)},
-		Size:     sql.NullInt64{Int64: req.Size, Valid: util.ValidIsNotZero(int(req.Size))},
-		MimeType: sql.NullString{String: req.MimeType, Valid: util.ValidIsNotBlankString(req.MimeType)},
-		Url:      sql.NullString{String: req.Url, Valid: util.ValidIsNotBlankString(req.Url)},
-		Path:     sql.NullString{String: req.Path, Valid: util.ValidIsNotBlankString(req.Path)},
+		Bucket:   sql.NullString{String: req.Bukcet, Valid: util.IsValid(req.Bukcet)},
+		Nama:     sql.NullString{String: req.Nama, Valid: util.IsValid(req.Nama)},
+		Size:     sql.NullInt64{Int64: req.Size, Valid: util.IsValid(int(req.Size))},
+		MimeType: sql.NullString{String: req.MimeType, Valid: util.IsValid(req.MimeType)},
+		Url:      sql.NullString{String: req.Url, Valid: util.IsValid(req.Url)},
+		Path:     sql.NullString{String: req.Path, Valid: util.IsValid(req.Path)},
 	}
 	t.dao.NewObjectQuery().Create(dtorepository.CreateObjectReq{
 		Item: item,

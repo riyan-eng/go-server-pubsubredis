@@ -16,12 +16,12 @@ type publisherStruct struct {
 }
 
 func NewPublisher() *publisherStruct {
-	addr := fmt.Sprintf("%v:%v", env.REDIS_HOST, env.REDIS_PORT)
+	addr := fmt.Sprintf("%v:%v", env.NewEnvironment().REDIS_HOST, env.NewEnvironment().REDIS_PORT)
 	redisClient := asynq.NewClient(asynq.RedisClientOpt{
 		Addr:     addr,
-		Username: env.REDIS_USERNAME,
-		Password: env.REDIS_PASSWORD,
-		DB:       env.REDIS_DATABASE,
+		Username: env.NewEnvironment().REDIS_USERNAME,
+		Password: env.NewEnvironment().REDIS_PASSWORD,
+		DB:       env.NewEnvironment().REDIS_DATABASE,
 	})
 	return &publisherStruct{
 		Redis: redisClient,

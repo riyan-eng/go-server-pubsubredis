@@ -187,18 +187,6 @@ paths:
       summary: Validate Token Reset Password
       tags:
       - Authentication
-  /example-template/:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses: {}
-      security:
-      - ApiKeyAuth: []
-      summary: Template
-      tags:
-      - Example
   /example/:
     get:
       parameters:
@@ -326,6 +314,16 @@ paths:
       summary: Put
       tags:
       - Example
+  /export/example/:
+    get:
+      consumes:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Template
+      tags:
+      - Export
   /object/:
     post:
       consumes:
@@ -345,70 +343,18 @@ paths:
       summary: Create
       tags:
       - Object
-  /object/{bucket}/{id}/download:
+  /template/example/:
     get:
       consumes:
       - application/json
-      parameters:
-      - description: bucket
-        in: path
-        name: bucket
-        required: true
-        type: string
-      - description: id
-        in: path
-        name: id
-        required: true
-        type: string
       produces:
       - application/json
       responses: {}
       security:
       - ApiKeyAuth: []
-      summary: Download
+      summary: Example
       tags:
-      - Object
-  /object/{bucket}/{id}/view:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: bucket
-        in: path
-        name: bucket
-        required: true
-        type: string
-      - description: id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses: {}
-      security:
-      - ApiKeyAuth: []
-      summary: View
-      tags:
-      - Object
-  /object/{id}/:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: id
-        in: path
-        name: id
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses: {}
-      security:
-      - ApiKeyAuth: []
-      summary: Detail
-      tags:
-      - Object
+      - Template
 securityDefinitions:
   ApiKeyAuth:
     description: Bearer access token here

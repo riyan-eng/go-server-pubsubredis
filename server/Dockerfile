@@ -10,7 +10,8 @@ RUN swag init -o ./pkg/docs
 RUN CGO_ENABLED=0 GOOS=linux go build -o /binary
 
 # release
-FROM alpine:3.18.4 AS release-stage
+FROM surnet/alpine-wkhtmltopdf:3.19.0-0.12.6-small AS release-stage
+# FROM alpine:3.18.4 AS release-stage
 RUN apk add --no-cache tini
 WORKDIR /app
 COPY --from=build-stage /binary /app/binary

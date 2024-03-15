@@ -1,6 +1,7 @@
 package app
 
 import (
+	"server/infrastructure"
 	"server/internal/entity"
 	"server/pkg/util"
 
@@ -18,5 +19,5 @@ func (s *ServiceServer) DetailExample(c *fiber.Ctx) error {
 	service := s.exampleService.Detail(entity.DetailExampleReq{
 		UUID: util.NewQuery().CheckExistingData("example", "example", c.Params("id")),
 	})
-	return util.NewResponse(c).Success(service.Item, nil, util.MESSAGE_OK_READ)
+	return util.NewResponse(c).Success(service.Item, nil, infrastructure.Localize("OK_CREATE"))
 }

@@ -18,12 +18,11 @@ func PageMeta(page, limit int) pageMeta {
 		limit = 1
 	}
 	offset := limit * (page - 1)
-	pageMeta := pageMeta{
+	return pageMeta{
 		Page:   page,
 		Limit:  limit,
 		Offset: offset,
 	}
-	return pageMeta
 }
 
 type paginationStruct struct{}
@@ -37,20 +36,18 @@ func (p *paginationStruct) GetTotalPages(totalRows, limit int) (totalPages int) 
 	return
 }
 
-func (p *paginationStruct) GetPageMeta(page, limit int) (meta pageMeta) {
+func (p *paginationStruct) GetPageMeta(page, limit int) pageMeta {
 	if page < 1 {
 		page = 1
 	}
 	if limit < 1 {
 		limit = 1
 	}
-	offset := limit * (page - 1)
-	meta = pageMeta{
+	return pageMeta{
 		Page:   page,
 		Limit:  limit,
-		Offset: offset,
+		Offset: limit * (page - 1),
 	}
-	return
 }
 
 func (p *paginationStruct) GetTotalRows(data any) (total int) {

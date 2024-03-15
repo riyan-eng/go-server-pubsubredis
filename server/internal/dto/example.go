@@ -1,8 +1,8 @@
 package dto
 
 type CreateExample struct {
-	Nama   string `json:"nama" valid:"required"`
-	Detail string `json:"detail"`
+	Nama   string `json:"nama" valid:"required;min:8;in:ADMIN,STAFF"`
+	Detail string `json:"detail" valid:"date:yyyy-mm-dd"`
 }
 
 type PutExample struct {

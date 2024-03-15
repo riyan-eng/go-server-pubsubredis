@@ -12,35 +12,34 @@ func PermitCasbin(enforce *casbin.Enforcer) fiber.Handler {
 		// get current user
 		userID, ok := c.Locals("user_id").(string)
 		if userID == "" || !ok {
-			return util.NewResponse(c).Error(
-				"Current logged in user not found.",
-				util.MESSAGE_UNAUTHORIZED, fiber.StatusUnauthorized,
-			)
+			util.PanicIfNeeded(util.CustomBadRequest{
+				Messages:    "Current logged in user not found.",
+				StatusCodes: 401,
+			})
 		}
 
 		// load new change policy
 		if err := enforce.LoadPolicy(); err != nil {
-			return util.NewResponse(c).Error(
-				"Failed to load casbin policy.",
-				util.MESSAGE_BAD_SYSTEM,
-				fiber.StatusInternalServerError,
-			)
+			util.PanicIfNeeded(util.CustomBadRequest{
+				Errors:      err.Error(),
+				Messages:    "Failed to load policy.",
+				StatusCodes: 500,
+			})
 		}
 		// casbin enforce policy
 		accepted, err := enforce.Enforce(userID, c.OriginalURL(), c.Method()) // userID - url - method
 		if err != nil {
-			return util.NewResponse(c).Error(
-				err.Error(),
-				"Error when authorizing user's accessibility.",
-				fiber.StatusBadRequest,
-			)
+			util.PanicIfNeeded(util.CustomBadRequest{
+				Errors:      err.Error(),
+				Messages:    "Error when authorizing user's accessibility.",
+				StatusCodes: 400,
+			})
 		}
 		if !accepted {
-			return util.NewResponse(c).Error(
-				nil,
-				"You are not allowed.",
-				fiber.StatusForbidden,
-			)
+			util.PanicIfNeeded(util.CustomBadRequest{
+				Messages:    "You are not allowed.",
+				StatusCodes: 403,
+			})
 		}
 		return c.Next()
 	}

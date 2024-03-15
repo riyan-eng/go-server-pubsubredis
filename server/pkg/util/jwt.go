@@ -42,15 +42,15 @@ type JwtResult struct {
 }
 
 func GenerateJwt(userUUID, roleCode, issuer string) JwtResult {
-	access := createToken(userUUID, roleCode, issuer, env.JWT_SECRET_ACCESS, env.JWT_EXPIRED_ACCESS)
-	refresh := createToken(userUUID, roleCode, issuer, env.JWT_SECRET_REFRESH, env.JWT_EXPIRED_REFRESH)
+	access := createToken(userUUID, roleCode, issuer, env.NewEnvironment().JWT_SECRET_ACCESS, env.NewEnvironment().JWT_EXPIRED_ACCESS)
+	refresh := createToken(userUUID, roleCode, issuer, env.NewEnvironment().JWT_SECRET_REFRESH, env.NewEnvironment().JWT_EXPIRED_REFRESH)
 	cachedJson, err := json.Marshal(CachedToken{
 		AccessUID:  access.uid,
 		RefreshUID: refresh.uid,
 	})
 	PanicIfNeeded(err)
 	ctx := context.Background()
-	infrastructure.Redis.Set(ctx, fmt.Sprintf("token-%s", userUUID), string(cachedJson), time.Minute*env.JWT_EXPIRED_LOGOFF)
+	infrastructure.Redis.Set(ctx, fmt.Sprintf("token-%s", userUUID), string(cachedJson), time.Minute*env.NewEnvironment().JWT_EXPIRED_LOGOFF)
 	return JwtResult{
 		AccessToken:  access.token,
 		RefreshToken: refresh.token,
@@ -59,13 +59,13 @@ func GenerateJwt(userUUID, roleCode, issuer string) JwtResult {
 }
 
 func GenerateTokenResetPassword(userUUID, roleCode, issuer string) JwtResult {
-	tokenResetPwd := createToken(userUUID, roleCode, issuer, env.JWT_SECRET_RESET, env.JWT_EXPIRED_RESET)
+	tokenResetPwd := createToken(userUUID, roleCode, issuer, env.NewEnvironment().JWT_SECRET_RESET, env.NewEnvironment().JWT_EXPIRED_RESET)
 	cachedJson, err := json.Marshal(CachedToken{
 		ResetPwdUID: tokenResetPwd.uid,
 	})
 	PanicIfNeeded(err)
 	ctx := context.Background()
-	infrastructure.Redis.Set(ctx, fmt.Sprintf("token-%s", userUUID), string(cachedJson), time.Minute*env.JWT_EXPIRED_LOGOFF)
+	infrastructure.Redis.Set(ctx, fmt.Sprintf("token-%s", userUUID), string(cachedJson), time.Minute*env.NewEnvironment().JWT_EXPIRED_LOGOFF)
 	return JwtResult{
 		ResetPwdToken: tokenResetPwd.token,
 		ExpiredAt:     tokenResetPwd.expat,

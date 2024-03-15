@@ -1,15 +1,12 @@
 package util
 
-func ValidIsNotZero(num int) (isNotZero bool) {
-	if num != 0 {
-		return true
+func IsValid(input interface{}) bool {
+	switch v := input.(type) {
+	case int:
+		return v != 0
+	case string:
+		return v != ""
+	default:
+		return false
 	}
-	return
-}
-
-func ValidIsNotBlankString(str string) (isNotZero bool) {
-	if str != "" {
-		return true
-	}
-	return
 }

@@ -17,21 +17,12 @@ func NewEnforcer() *casbin.Enforcer {
 		fmt.Printf("casbin: failed to initialize adapter - %v \n", err)
 		os.Exit(1)
 	}
-	enforce, err := casbin.NewEnforcer("casbin.conf", adapter)
+	enforce, err := casbin.NewEnforcer("./casbin.conf", adapter)
 	if err != nil {
 		fmt.Printf("casbin: failed to create enforcer - %v \n", err)
 		os.Exit(1)
 	}
-	// if hasPolicy := enforce.HasPolicy("ADMIN", "/auth/register", "(GET)|(POST)|(PUT)|(DELETE)"); !hasPolicy {
-	// 	enforce.AddPolicy("ADMIN", "/auth/register", "(GET)|(POST)|(PUT)|(DELETE)")
-	// }
 
-	// enforce.AddPolicy("ADMIN", "/pegawai*", "(GET)|(POST)|(PATCH)|(DELETE)")
-	// enforce.AddPolicy("EMPLOYEE", "/task*", "(GET)|(POST)|(PATCH)|(DELETE)")
-	// enforce.AddPolicy("PENGANGGARAN", "/indikator_kinerja/*", "(GET)|(POST)|(PATCH)|(PUT)|(DELETE)")
-	// enforce.AddPolicy("ADM_WIL", "/indikator_kinerja/*", "(GET)")
-	// enforce.AddPolicy("ADM_PEM", "/indikator_kinerja/*", "(GET)")
-	// enforce.AddPolicy("OTM_DRH", "/indikator_kinerja/*", "(GET)")
 	enforce.AddPolicy("ADMIN", "/example/*", "(GET)|(POST)|(PATCH)|(PUT)|(DELETE)")
 	enforce.AddPolicy("MASYARAKAT", "/example/*", "(GET)")
 	enforce.LoadPolicy()

@@ -21,16 +21,16 @@ var SqlxDB *sqlx.DB
 func ConnectSqlDB() {
 	dsn := fmt.Sprintf(`
 		host=%v user=%v password=%v dbname=%v port=%v sslmode=disable TimeZone=%v
-	`, env.POSTGRE_HOST, env.POSTGRE_USERNAME, env.POSTGRE_PASSWORD, env.POSTGRE_DATABASE, env.POSTGRE_PORT, env.POSTGRE_TIMEZONE)
+	`, env.NewEnvironment().POSTGRE_HOST, env.NewEnvironment().POSTGRE_USERNAME, env.NewEnvironment().POSTGRE_PASSWORD, env.NewEnvironment().POSTGRE_DATABASE, env.NewEnvironment().POSTGRE_PORT, env.NewEnvironment().POSTGRE_TIMEZONE)
 	var err error
 	SqlDB, err = sql.Open("postgres", dsn)
 	if err != nil {
 		fmt.Println("sql database: can't connect to database")
 		os.Exit(1)
 	}
-	SqlDB.SetMaxIdleConns(env.POSTGRE_CONN_MAX_IDLE)
-	SqlDB.SetMaxOpenConns(env.POSTGRE_CONN_MAX_OPEN)
-	SqlDB.SetConnMaxLifetime(time.Minute * env.POSTGRE_CONN_MAX_LIFETIME)
+	SqlDB.SetMaxIdleConns(env.NewEnvironment().POSTGRE_CONN_MAX_IDLE)
+	SqlDB.SetMaxOpenConns(env.NewEnvironment().POSTGRE_CONN_MAX_OPEN)
+	SqlDB.SetConnMaxLifetime(time.Minute * env.NewEnvironment().POSTGRE_CONN_MAX_LIFETIME)
 	if err := SqlDB.Ping(); err != nil {
 		fmt.Printf("sql database: can't ping to database - %v \n", err)
 		os.Exit(1)
@@ -56,16 +56,16 @@ func ConnectGormDB() {
 func ConnectSqlxDB() {
 	dsn := fmt.Sprintf(`
 		host=%v user=%v password=%v dbname=%v port=%v sslmode=disable TimeZone=%v
-	`, env.POSTGRE_HOST, env.POSTGRE_USERNAME, env.POSTGRE_PASSWORD, env.POSTGRE_DATABASE, env.POSTGRE_PORT, env.POSTGRE_TIMEZONE)
+	`, env.NewEnvironment().POSTGRE_HOST, env.NewEnvironment().POSTGRE_USERNAME, env.NewEnvironment().POSTGRE_PASSWORD, env.NewEnvironment().POSTGRE_DATABASE, env.NewEnvironment().POSTGRE_PORT, env.NewEnvironment().POSTGRE_TIMEZONE)
 	var err error
 	SqlxDB, err = sqlx.Connect("postgres", dsn)
 	if err != nil {
 		fmt.Println("sqlx database: can't connect to database")
 		os.Exit(1)
 	}
-	SqlxDB.SetMaxIdleConns(env.POSTGRE_CONN_MAX_IDLE)
-	SqlxDB.SetMaxOpenConns(env.POSTGRE_CONN_MAX_OPEN)
-	SqlxDB.SetConnMaxLifetime(time.Minute * env.POSTGRE_CONN_MAX_LIFETIME)
+	SqlxDB.SetMaxIdleConns(env.NewEnvironment().POSTGRE_CONN_MAX_IDLE)
+	SqlxDB.SetMaxOpenConns(env.NewEnvironment().POSTGRE_CONN_MAX_OPEN)
+	SqlxDB.SetConnMaxLifetime(time.Minute * env.NewEnvironment().POSTGRE_CONN_MAX_LIFETIME)
 	if err := SqlxDB.Ping(); err != nil {
 		fmt.Printf("sqlx database: can't ping to database - %v \n", err)
 		os.Exit(1)

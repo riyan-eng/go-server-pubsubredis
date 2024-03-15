@@ -42,6 +42,6 @@ func (s *GmailSender) SendEmail(subject string, content string, to []string, cc 
 	e.To = to
 	e.Cc = cc
 	e.Bcc = bcc
-	smtpAuth := smtp.PlainAuth("", s.fromEmailAddress, s.fromEmailPassword, env.SMTP_HOST)
-	return e.Send(env.SMTP_HOST+":"+env.SMTP_PORT, smtpAuth)
+	smtpAuth := smtp.PlainAuth("", s.fromEmailAddress, s.fromEmailPassword, env.NewEnvironment().SMTP_HOST)
+	return e.Send(env.NewEnvironment().SMTP_HOST+":"+env.NewEnvironment().SMTP_PORT, smtpAuth)
 }

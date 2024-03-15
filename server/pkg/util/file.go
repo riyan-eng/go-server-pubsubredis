@@ -45,7 +45,7 @@ func (f *fileStruct) SaveLocal(c *fiber.Ctx, file *multipart.FileHeader, bucket 
 	filename := fmt.Sprintf(`%s.%s`, data.UUID, data.Tipe)
 	data.Path = fmt.Sprintf(`./media/object/%s`, filename)
 
-	data.Url = fmt.Sprintf(`%s/object/%s/%s/view`, env.SERVER_HOST_BE, bucket, data.UUID)
+	data.Url = fmt.Sprintf(`%s/object/%s/%s/view`, env.NewEnvironment().SERVER_HOST_BE, bucket, data.UUID)
 	go func() {
 		c.SaveFile(file, data.Path)
 	}()

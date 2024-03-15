@@ -1,6 +1,7 @@
 package app
 
 import (
+	"server/infrastructure"
 	"server/internal/entity"
 	"server/pkg/util"
 
@@ -17,5 +18,5 @@ func (s *ServiceServer) Logout(c *fiber.Ctx) error {
 	s.authService.Logout(entity.AuthenticationLogoutReq{
 		UserUUID: userUUID,
 	})
-	return util.NewResponse(c).Success(nil, nil, util.MESSAGE_OK_LOGOUT)
+	return util.NewResponse(c).Success(nil, nil, infrastructure.Localize("OK_CREATE"))
 }

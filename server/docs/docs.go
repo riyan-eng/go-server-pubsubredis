@@ -205,26 +205,6 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/example-template/": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Example"
-                ],
-                "summary": "Template",
-                "responses": {}
-            }
-        },
         "/example/": {
             "get": {
                 "security": [
@@ -426,6 +406,23 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/export/example/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Export"
+                ],
+                "summary": "Template",
+                "responses": {}
+            }
+        },
         "/object/": {
             "post": {
                 "security": [
@@ -457,7 +454,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/object/{bucket}/{id}/download": {
+        "/template/example/": {
             "get": {
                 "security": [
                     {
@@ -471,90 +468,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Object"
+                    "Template"
                 ],
-                "summary": "Download",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "bucket",
-                        "name": "bucket",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            }
-        },
-        "/object/{bucket}/{id}/view": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Object"
-                ],
-                "summary": "View",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "bucket",
-                        "name": "bucket",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
-                        "type": "string",
-                        "description": "id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {}
-            }
-        },
-        "/object/{id}/": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Object"
-                ],
-                "summary": "Detail",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
+                "summary": "Example",
                 "responses": {}
             }
         }

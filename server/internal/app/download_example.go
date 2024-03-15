@@ -7,12 +7,10 @@ import (
 	qrcode "github.com/skip2/go-qrcode"
 )
 
-// @Summary     Detail
-// @Tags       	Example
+// @Summary     Template
+// @Tags       	Export
 // @Accept		json
-// @Produce		json
-// @Param       id		path	string				true	"id"
-// @Router      /example/{id}/ [get]
+// @Router      /export/example/	[get]
 // @Security ApiKeyAuth
 func (s *ServiceServer) DownloadExample(c *fiber.Ctx) error {
 	var imgByte []byte

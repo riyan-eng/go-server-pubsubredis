@@ -36,7 +36,7 @@ func (v *validStruct) ValidateStruct(dataStruct any) (validErrorSlice url.Values
 			for _, caca := range strings.Split(value, ";") {
 				lala := strings.Split(caca, ":")
 				lema := lala[0]
-				lele := fmt.Sprintf("%s:%s", lema, CallMessage(caca))
+				lele := fmt.Sprintf("%s:%s", lema, callMessage(caca))
 				lemper = append(lemper, lele)
 			}
 			validMessagesSlice = append(validMessagesSlice, validStruct{
@@ -102,7 +102,7 @@ func generateErrorSlice(rules map[string][]string, messages map[string][]string,
 	return
 }
 
-func CallMessage(key string) string {
+func callMessage(key string) string {
 	clearKeyTemp := strings.Split(key, ":")
 	clearKey := clearKeyTemp[0]
 
@@ -111,21 +111,21 @@ func CallMessage(key string) string {
 		"email":    infrastructure.Localize("M_VAL_EMAIL"),
 		"min": infrastructure.Localize(&i18n.LocalizeConfig{
 			MessageID:    "M_VAL_MIN",
-			TemplateData: map[string]string{"min_char": IfKey(key)},
+			TemplateData: map[string]string{"min_char": ifKey(key)},
 		}),
 		"date": infrastructure.Localize(&i18n.LocalizeConfig{
 			MessageID:    "M_VAL_DATE",
-			TemplateData: map[string]string{"date_format": IfKey(key)},
+			TemplateData: map[string]string{"date_format": ifKey(key)},
 		}),
 		"in": infrastructure.Localize(&i18n.LocalizeConfig{
 			MessageID:    "M_VAL_IN",
-			TemplateData: map[string]string{"in_char": IfKey(key)},
+			TemplateData: map[string]string{"in_char": ifKey(key)},
 		}),
 	}
 	return mitos[clearKey]
 }
 
-func IfKey(data string) (param string) {
+func ifKey(data string) (param string) {
 	parts := strings.Split(data, ":")
 	if len(parts) > 1 {
 		param = parts[1]

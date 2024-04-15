@@ -1,6 +1,7 @@
 package util
 
 import (
+	"database/sql"
 	"server/infrastructure"
 	"strings"
 
@@ -34,6 +35,11 @@ func PanicSql(err error) {
 					Message: temp2,
 				})
 			}
+		}
+		if err == sql.ErrNoRows {
+			PanicIfNeeded(NoData{
+				Message: err.Error(),
+			})
 		}
 		PanicIfNeeded(err)
 	}

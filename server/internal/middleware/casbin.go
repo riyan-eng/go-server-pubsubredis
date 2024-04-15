@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"server/pkg/util"
+	"server/util"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gofiber/fiber/v2"

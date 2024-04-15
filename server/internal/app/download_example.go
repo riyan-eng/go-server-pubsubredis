@@ -1,7 +1,7 @@
 package app
 
 import (
-	"server/pkg/util"
+	"server/util"
 
 	"github.com/gofiber/fiber/v2"
 	qrcode "github.com/skip2/go-qrcode"

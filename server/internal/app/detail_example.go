@@ -3,7 +3,7 @@ package app
 import (
 	"server/infrastructure"
 	"server/internal/entity"
-	"server/pkg/util"
+	"server/util"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -16,8 +16,8 @@ import (
 // @Router      /example/{id}/ [get]
 // @Security ApiKeyAuth
 func (s *ServiceServer) DetailExample(c *fiber.Ctx) error {
-	service := s.exampleService.Detail(entity.DetailExampleReq{
+	service := s.exampleService.Detail(c.Context(), entity.DetailExampleReq{
 		UUID: util.NewQuery().CheckExistingData("example", "example", c.Params("id")),
 	})
-	return util.NewResponse(c).Success(service.Item, nil, infrastructure.Localize("OK_CREATE"))
+	return util.NewResponse(c).Success(service.Data, nil, infrastructure.Localize("OK_READ"))
 }

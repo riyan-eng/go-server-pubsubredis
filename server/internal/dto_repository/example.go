@@ -1,6 +1,9 @@
 package dtorepository
 
-import "server/internal/model"
+import (
+	"server/internal/datastruct"
+	"server/internal/model"
+)
 
 type CreateExampleReq struct {
 	Item model.Example
@@ -11,10 +14,12 @@ type ListExampleReq struct {
 	Limit  int
 	Offset int
 	Order  string
+	Data   *[]datastruct.ListExample
 }
 
 type DetailExampleReq struct {
 	UUID string
+	Data *datastruct.DetailExample
 }
 
 type DeleteExampleReq struct {

@@ -4,7 +4,7 @@ import (
 	"server/infrastructure"
 	"server/internal/dto"
 	"server/internal/entity"
-	"server/pkg/util"
+	"server/util"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -23,7 +23,7 @@ func (s *ServiceServer) CreateExample(c *fiber.Ctx) error {
 	errors, err := util.NewValidation().ValidateStruct(*body)
 	util.PanicBodyValidation(errors, err)
 
-	service := s.exampleService.Create(entity.CreateExampleReq{
+	service := s.exampleService.Create(c.Context(), entity.CreateExampleReq{
 		Nama:   body.Nama,
 		Detail: body.Detail,
 	})

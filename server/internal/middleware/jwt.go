@@ -8,7 +8,7 @@ import (
 	"server/env"
 	"server/infrastructure"
 
-	"server/pkg/util"
+	"server/util"
 
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/sync/errgroup"

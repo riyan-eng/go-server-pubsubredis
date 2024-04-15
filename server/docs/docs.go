@@ -384,7 +384,7 @@ const docTemplate = `{
                 "tags": [
                     "Example"
                 ],
-                "summary": "Put",
+                "summary": "Patch",
                 "parameters": [
                     {
                         "type": "string",
@@ -451,6 +451,20 @@ const docTemplate = `{
                         }
                     }
                 ],
+                "responses": {}
+            }
+        },
+        "/pdf/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PDF"
+                ],
+                "summary": "Example",
                 "responses": {}
             }
         },
@@ -556,9 +570,7 @@ const docTemplate = `{
         "dto.PatchExample": {
             "type": "object",
             "properties": {
-                "detail": {
-                    "type": "string"
-                },
+                "detail": {},
                 "nama": {
                     "type": "string"
                 }

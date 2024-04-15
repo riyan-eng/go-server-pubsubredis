@@ -33,12 +33,6 @@ func ErrorHandler(c *fiber.Ctx, err error) error {
 			infrastructure.Localize("NOT_FOUND"),
 			fiber.StatusBadRequest,
 		)
-	// case BodyValidationError:
-	// 	return NewResponse(c).Error(
-	// 		err.ListError,
-	// 		infrastructure.Localize("FAILED_VALIDATION"),
-	// 		fiber.StatusBadRequest,
-	// 	)
 	case CustomBadRequest:
 		return NewResponse(c).Error(
 			err.CustomError(),

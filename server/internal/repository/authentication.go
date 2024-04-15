@@ -7,7 +7,7 @@ import (
 
 	dtorepository "server/internal/dto_repository"
 	"server/internal/model"
-	"server/pkg/util"
+	"server/util"
 
 	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"

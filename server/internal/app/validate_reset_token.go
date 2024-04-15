@@ -4,7 +4,7 @@ import (
 	"server/infrastructure"
 	"server/internal/dto"
 	"server/internal/entity"
-	"server/pkg/util"
+	"server/util"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/riyan-eng/riyanisgood"

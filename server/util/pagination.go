@@ -49,14 +49,3 @@ func (p *paginationStruct) GetPageMeta(page, limit int) pageMeta {
 		Offset: limit * (page - 1),
 	}
 }
-
-func (p *paginationStruct) GetTotalRows(data any) (total int) {
-	v, ok := data.([]interface{})
-	if !ok {
-		PanicIfNeeded("Failed on generating total rows.")
-	}
-	if len(v) != 0 {
-		total = 1
-	}
-	return
-}

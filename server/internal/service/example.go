@@ -8,21 +8,21 @@ import (
 	"server/internal/entity"
 	"server/internal/model"
 	"server/internal/repository"
-	"server/pkg/util"
+	"server/util"
 
 	"github.com/SebastiaanKlippert/go-wkhtmltopdf"
-	"github.com/blockloop/scan/v2"
 	"github.com/google/uuid"
+	"github.com/valyala/fasthttp"
 	"github.com/xuri/excelize/v2"
 )
 
 type ExampleService interface {
 	List(entity.ListExampleReq) entity.ListExampleRes
-	Create(entity.CreateExampleReq) entity.CreateExampleRes
+	Create(*fasthttp.RequestCtx, entity.CreateExampleReq) entity.CreateExampleRes
 	Delete(entity.DeleteExampleReq)
-	Detail(entity.DetailExampleReq) entity.DetailExampleRes
+	Detail(*fasthttp.RequestCtx, entity.DetailExampleReq) entity.DetailExampleRes
 	Put(entity.PutExampleReq)
-	Patch(entity.PatchExampleReq)
+	Patch(*fasthttp.RequestCtx, entity.PatchExampleReq) entity.DetailExampleRes
 	Template() entity.TemplateExampleRes
 	Import(entity.ImportExampleReq)
 	Pdf() (pdf *wkhtmltopdf.PDFGenerator)
@@ -39,22 +39,23 @@ func NewExampleService(dao repository.DAO) ExampleService {
 }
 
 func (t *exampleService) List(req entity.ListExampleReq) (res entity.ListExampleRes) {
-	sqlrows := t.dao.NewExampleQuery().List(dtorepository.ListExampleReq{
+	t.dao.NewExampleQuery().List(dtorepository.ListExampleReq{
 		Search: req.Search,
 		Limit:  req.Limit,
 		Offset: req.Offset,
 		Order:  req.Order,
+		Data:   &res.DataData,
 	})
-	err := scan.Rows(&res.Items, sqlrows)
-	util.PanicIfNeeded(err)
-
-	if len(res.Items) > 0 {
-		res.Total = res.Items[0].TotalRows
+	// err := scan.Rows(&res.DataData, sqlrows)
+	// util.PanicIfNeeded(err)
+	
+	if len(res.DataData) > 0 {
+		res.Total = res.DataData[0].TotalRows
 	}
 	return
 }
 
-func (t *exampleService) Create(req entity.CreateExampleReq) (res entity.CreateExampleRes) {
+func (t *exampleService) Create(ctx *fasthttp.RequestCtx, req entity.CreateExampleReq) (res entity.CreateExampleRes) {
 	newUUID := uuid.NewString()
 	item := model.Example{
 		UUID:   newUUID,
@@ -65,8 +66,8 @@ func (t *exampleService) Create(req entity.CreateExampleReq) (res entity.CreateE
 		Item: item,
 	})
 
-	detail := t.Detail(entity.DetailExampleReq{UUID: newUUID})
-	res.Item = detail.Item
+	// detail := t.Detail(ctx, entity.DetailExampleReq{UUID: newUUID})
+	// res.Item = detail.Data
 	return
 }
 
@@ -76,12 +77,11 @@ func (t *exampleService) Delete(req entity.DeleteExampleReq) {
 	})
 }
 
-func (t *exampleService) Detail(req entity.DetailExampleReq) (res entity.DetailExampleRes) {
-	sqlrows := t.dao.NewExampleQuery().Detail(dtorepository.DetailExampleReq{
+func (t *exampleService) Detail(ctx *fasthttp.RequestCtx, req entity.DetailExampleReq) (res entity.DetailExampleRes) {
+	t.dao.NewExampleQuery().Detail(ctx, dtorepository.DetailExampleReq{
 		UUID: req.UUID,
+		Data: &res.Data,
 	})
-	err := scan.Row(&res.Item, sqlrows)
-	util.PanicIfNeeded(err)
 	return
 }
 
@@ -95,14 +95,20 @@ func (t *exampleService) Put(req entity.PutExampleReq) {
 	})
 }
 
-func (t *exampleService) Patch(req entity.PatchExampleReq) {
+func (t *exampleService) Patch(ctx *fasthttp.RequestCtx, req entity.PatchExampleReq) (res entity.DetailExampleRes) {
 	item := model.Example{
-		UUID: req.UUID,
-		Nama: sql.NullString{String: req.Nama, Valid: util.IsValid(req.Nama)},
+		UUID:   req.UUID,
+		Nama:   sql.NullString{String: req.Nama, Valid: util.IsValid(req.Nama)},
+		Detail: sql.NullString{String: util.Convert().AnyToString(req.Detail), Valid: util.IsValid(req.Detail)},
 	}
-	t.dao.NewExampleQuery().Patch(dtorepository.PatchExampleReq{
+	t.dao.NewExampleQuery().Patch(ctx, dtorepository.PatchExampleReq{
 		Item: item,
 	})
+
+	res.Data = t.Detail(ctx, entity.DetailExampleReq{
+		UUID: req.UUID,
+	}).Data
+	return
 }
 
 func (t *exampleService) Template() (res entity.TemplateExampleRes) {

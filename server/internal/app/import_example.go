@@ -3,7 +3,7 @@ package app
 import (
 	"server/internal/dto"
 	"server/internal/entity"
-	"server/pkg/util"
+	"server/util"
 
 	"github.com/gofiber/fiber/v2"
 )

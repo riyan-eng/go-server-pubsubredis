@@ -1,7 +1,7 @@
 package config
 
 import (
-	"server/pkg/util"
+	"server/util"
 
 	"github.com/gofiber/fiber/v2"
 	jsoniter "github.com/json-iterator/go"

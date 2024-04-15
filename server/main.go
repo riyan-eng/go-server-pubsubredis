@@ -14,19 +14,12 @@ import (
 	"server/internal/route"
 	"server/internal/service"
 
-	ut "github.com/go-playground/universal-translator"
-	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/swagger"
-)
-
-var (
-	uni      *ut.UniversalTranslator
-	validate *validator.Validate
 )
 
 func init() {
@@ -44,7 +37,6 @@ func init() {
 	infrastructure.ConnectGormDB()
 	infrastructure.ConnRedis()
 	infrastructure.NewLocalizer()
-	config.NewValidation()
 	os.Setenv("TZ", env.NewEnvironment().SERVER_TIMEZONE)
 }
 
@@ -70,7 +62,7 @@ func main() {
 	fiberApp.Get("/docs/*", swagger.New(config.NewSwaggerConfig()))
 
 	// service
-	dao := repository.NewDAO(infrastructure.SqlDB, infrastructure.GormDB, infrastructure.Redis, config.NewEnforcer())
+	dao := repository.NewDAO(infrastructure.SqlDB, infrastructure.SqlxDB, infrastructure.GormDB, infrastructure.Redis, config.NewEnforcer())
 	exampleService := service.NewExampleService(dao)
 	authenticationService := service.NewAuthenticationService(dao)
 	objectService := service.NewObjectService(dao)

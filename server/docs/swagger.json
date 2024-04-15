@@ -373,7 +373,7 @@
                 "tags": [
                     "Example"
                 ],
-                "summary": "Put",
+                "summary": "Patch",
                 "parameters": [
                     {
                         "type": "string",
@@ -440,6 +440,20 @@
                         }
                     }
                 ],
+                "responses": {}
+            }
+        },
+        "/pdf/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "tags": [
+                    "PDF"
+                ],
+                "summary": "Example",
                 "responses": {}
             }
         },
@@ -545,9 +559,7 @@
         "dto.PatchExample": {
             "type": "object",
             "properties": {
-                "detail": {
-                    "type": "string"
-                },
+                "detail": {},
                 "nama": {
                     "type": "string"
                 }

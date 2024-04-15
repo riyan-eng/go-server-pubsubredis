@@ -6,7 +6,7 @@ import (
 
 	dtorepository "server/internal/dto_repository"
 	"server/internal/model"
-	"server/pkg/util"
+	"server/util"
 
 	"gorm.io/gorm"
 )

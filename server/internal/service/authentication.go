@@ -11,7 +11,7 @@ import (
 	"server/internal/entity"
 	"server/internal/model"
 	"server/internal/repository"
-	"server/pkg/util"
+	"server/util"
 
 	"github.com/blockloop/scan/v2"
 )

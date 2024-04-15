@@ -23,4 +23,6 @@ func SetupSubApp(fiberApp *fiber.App,
 	fiberApp.Mount("/template", Template(allHandler, enforcer))
 	fiberApp.Mount("/import", Import(allHandler, enforcer))
 	fiberApp.Mount("/export", Export(allHandler, enforcer))
+	fiberApp.Mount("/export", Export(allHandler, enforcer))
+	fiberApp.Mount("/object", ObjectRoute(allHandler, enforcer))
 }

@@ -23,7 +23,8 @@ type ListExampleReq struct {
 }
 
 type ListExampleRes struct {
-	Items []datastruct.Example
+	// Data []datastruct.Example
+	DataData  []datastruct.ListExample
 	Total int
 }
 
@@ -32,7 +33,7 @@ type DetailExampleReq struct {
 }
 
 type DetailExampleRes struct {
-	Item datastruct.Example
+	Data datastruct.DetailExample
 }
 
 type DeleteExampleReq struct {
@@ -48,7 +49,7 @@ type PutExampleReq struct {
 type PatchExampleReq struct {
 	UUID   string
 	Nama   string
-	Detail string
+	Detail any
 }
 
 type TemplateExampleRes struct {

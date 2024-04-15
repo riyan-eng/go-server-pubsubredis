@@ -4,7 +4,7 @@ import (
 	"server/infrastructure"
 	"server/internal/dto"
 	"server/internal/entity"
-	"server/pkg/util"
+	"server/util"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -39,5 +39,5 @@ func (s *ServiceServer) ListExample(c *fiber.Ctx) error {
 		TotalPages: util.NewPagination().GetTotalPages(service.Total, pageMeta.Limit),
 	}
 
-	return util.NewResponse(c).Success(service.Items, meta, infrastructure.Localize("OK_CREATE"))
+	return util.NewResponse(c).Success(service.DataData, meta, infrastructure.Localize("OK_CREATE"))
 }

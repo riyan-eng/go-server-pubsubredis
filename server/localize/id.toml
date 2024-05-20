@@ -16,7 +16,7 @@ other = "Berhasil memasukkan data."
 other = "Berhasil menghapus data."
 
 [OK_UPDATE]             
-other = "Berhasil memperbarui data."
+other = "Berhasil memperbaharui data."
 
 [OK_READ]               
 other = "Berhasil menampilkan data."
@@ -43,7 +43,7 @@ other = "Berhasil keluar."
 other = "Berhasil meminta token."
 
 [OK_CHANGE_PASSWORD]     
-other = "Berhasil memperbarui kata sandi."
+other = "Berhasil memperbaharui kata sandi."
 
 [FAILED_CREATE]          
 other = "Gagal memasukkan data."
@@ -53,6 +53,15 @@ other = "Gagal menghapus data."
 
 [FAILED_UPDATE]          
 other = "Gagal memperbarui data."
+
+[FAILED_CREATE_NO_DATA]          
+other = "Tidak ada data yang dimasukkan."
+
+[FAILED_DELETE_NO_DATA]          
+other = "Tidak ada data yang dihapus."
+
+[FAILED_UPDATE_NO_DATA]          
+other = "Tidak ada data yang diperbaharui."
 
 [FAILED_READ]            
 other = "Gagal menampilkan data."

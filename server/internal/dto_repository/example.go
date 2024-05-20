@@ -6,7 +6,7 @@ import (
 )
 
 type CreateExampleReq struct {
-	Item model.Example
+	ModelExample model.ModelExample
 }
 
 type ListExampleReq struct {
@@ -14,12 +14,19 @@ type ListExampleReq struct {
 	Limit  int
 	Offset int
 	Order  string
-	Data   *[]datastruct.ListExample
+}
+
+type ListExampleRes struct {
+	Data      []datastruct.ListExample
+	CountRows int
 }
 
 type DetailExampleReq struct {
 	UUID string
-	Data *datastruct.DetailExample
+}
+
+type DetailExampleRes struct {
+	Data datastruct.DetailExample
 }
 
 type DeleteExampleReq struct {
@@ -27,11 +34,12 @@ type DeleteExampleReq struct {
 }
 
 type PutExampleReq struct {
-	Item model.Example
+	ModelExample model.ModelExample
 }
 
 type PatchExampleReq struct {
-	Item model.Example
+	Item         model.Example
+	ModelExample model.ModelExample
 }
 
 type ImportExampleReq struct {

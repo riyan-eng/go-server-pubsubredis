@@ -16,8 +16,8 @@ import (
 // @Router      /example/{id}/ [delete]
 // @Security ApiKeyAuth
 func (s *ServiceServer) DeleteExample(c *fiber.Ctx) error {
-	s.exampleService.Delete(entity.DeleteExampleReq{
-		UUID: util.NewQuery().CheckExistingData("example", "example", c.Params("id")),
+	s.exampleService.Delete(c.Context(), entity.DeleteExampleReq{
+		UUID: c.Params("id"),
 	})
-	return util.NewResponse(c).Success(nil, nil, infrastructure.Localize("OK_CREATE"))
+	return util.NewResponse(c).Success(nil, nil, infrastructure.Localize("OK_DELETE"))
 }

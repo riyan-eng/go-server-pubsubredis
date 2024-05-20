@@ -7,6 +7,7 @@ import (
 )
 
 type CreateExampleReq struct {
+	UUID   string
 	Nama   string
 	Detail string
 }
@@ -23,9 +24,8 @@ type ListExampleReq struct {
 }
 
 type ListExampleRes struct {
-	// Data []datastruct.Example
-	DataData  []datastruct.ListExample
-	Total int
+	Data      []datastruct.ListExample
+	CountRows int
 }
 
 type DetailExampleReq struct {

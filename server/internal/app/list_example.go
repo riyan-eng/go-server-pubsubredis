@@ -25,7 +25,7 @@ func (s *ServiceServer) ListExample(c *fiber.Ctx) error {
 
 	pageMeta := util.NewPagination().GetPageMeta(queryParam.Page, queryParam.Limit)
 
-	service := s.exampleService.List(entity.ListExampleReq{
+	service := s.exampleService.List(c.Context(), entity.ListExampleReq{
 		Search: queryParam.Search,
 		Order:  queryParam.Order,
 		Limit:  pageMeta.Limit,
@@ -35,9 +35,27 @@ func (s *ServiceServer) ListExample(c *fiber.Ctx) error {
 	meta := util.PaginationMeta{
 		Page:       pageMeta.Page,
 		Limit:      pageMeta.Limit,
-		TotalRows:  service.Total,
-		TotalPages: util.NewPagination().GetTotalPages(service.Total, pageMeta.Limit),
+		CountRows:  service.CountRows,
+		CountPages: util.NewPagination().GetCountPages(service.CountRows, pageMeta.Limit),
 	}
 
-	return util.NewResponse(c).Success(service.DataData, meta, infrastructure.Localize("OK_CREATE"))
+	return util.NewResponse(c).Success(service.Data, meta, infrastructure.Localize("OK_CREATE"))
+	// accessToken, accessExpiredAt, err := util.NewToken().CreateAccess(c.Context(), "id")
+	// if err != nil {
+	// 	return util.NewResponse(c).Error(err, "token error", 400)
+	// }
+
+	// refreshToken, refreshExpiredAt, err := util.NewToken().CreateRefresh(c.Context(), "id")
+	// if err != nil {
+	// 	return util.NewResponse(c).Error(err, "token error", 400)
+	// }
+
+	// data := fiber.Map{
+	// 	"access_token":       accessToken,
+	// 	"access_expired_at":  accessExpiredAt.Local(),
+	// 	"refresh_token":      refreshToken,
+	// 	"refresh_expired_at": refreshExpiredAt.Local(),
+	// }
+	// return util.NewResponse(c).Success(data, nil, infrastructure.Localize("OK_CREATE"))
+
 }

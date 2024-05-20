@@ -19,8 +19,8 @@ type Response struct {
 type PaginationMeta struct {
 	Page       int `json:"page"`
 	Limit      int `json:"per_page"`
-	TotalRows  int `json:"total"`
-	TotalPages int `json:"total_pages"`
+	CountRows  int `json:"total"`
+	CountPages int `json:"total_pages"`
 }
 
 type ErrorResponse struct {

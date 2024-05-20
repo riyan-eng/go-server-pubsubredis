@@ -23,10 +23,10 @@ func (s *ServiceServer) PutExample(c *fiber.Ctx) error {
 	err := c.BodyParser(&body)
 	util.PanicIfNeeded(err)
 
-	s.exampleService.Put(entity.PutExampleReq{
-		UUID:   util.NewQuery().CheckExistingData("example", "example", c.Params("id")),
+	service := s.exampleService.Put(c.Context(), entity.PutExampleReq{
+		UUID:   c.Params("id"),
 		Nama:   body.Nama,
 		Detail: body.Detail,
 	})
-	return util.NewResponse(c).Success(nil, nil, infrastructure.Localize("OK_CREATE"))
+	return util.NewResponse(c).Success(service.Data, nil, infrastructure.Localize("OK_UPDATE"))
 }

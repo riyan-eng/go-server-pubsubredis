@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"strings"
 
+	"server/infrastructure"
 	dtorepository "server/internal/dto_repository"
 	"server/internal/entity"
 	"server/internal/model"
@@ -17,15 +18,15 @@ import (
 )
 
 type ExampleService interface {
-	List(entity.ListExampleReq) entity.ListExampleRes
-	Create(*fasthttp.RequestCtx, entity.CreateExampleReq) entity.CreateExampleRes
-	Delete(entity.DeleteExampleReq)
+	List(*fasthttp.RequestCtx, entity.ListExampleReq) entity.ListExampleRes
+	Create(*fasthttp.RequestCtx, entity.CreateExampleReq) entity.DetailExampleRes
 	Detail(*fasthttp.RequestCtx, entity.DetailExampleReq) entity.DetailExampleRes
-	Put(entity.PutExampleReq)
+	Put(*fasthttp.RequestCtx, entity.PutExampleReq) entity.DetailExampleRes
 	Patch(*fasthttp.RequestCtx, entity.PatchExampleReq) entity.DetailExampleRes
-	Template() entity.TemplateExampleRes
-	Import(entity.ImportExampleReq)
-	Pdf() (pdf *wkhtmltopdf.PDFGenerator)
+	Delete(*fasthttp.RequestCtx, entity.DeleteExampleReq)
+	Template(*fasthttp.RequestCtx) entity.TemplateExampleRes
+	Import(*fasthttp.RequestCtx, entity.ImportExampleReq)
+	Pdf(*fasthttp.RequestCtx) (pdf *wkhtmltopdf.PDFGenerator)
 }
 
 type exampleService struct {
@@ -38,72 +39,46 @@ func NewExampleService(dao repository.DAO) ExampleService {
 	}
 }
 
-func (t *exampleService) List(req entity.ListExampleReq) (res entity.ListExampleRes) {
-	t.dao.NewExampleQuery().List(dtorepository.ListExampleReq{
+func (t *exampleService) List(ctx *fasthttp.RequestCtx, req entity.ListExampleReq) (res entity.ListExampleRes) {
+	repo, err := t.dao.NewExampleQuery().List(ctx, dtorepository.ListExampleReq{
 		Search: req.Search,
 		Limit:  req.Limit,
 		Offset: req.Offset,
 		Order:  req.Order,
-		Data:   &res.DataData,
 	})
-	// err := scan.Rows(&res.DataData, sqlrows)
-	// util.PanicIfNeeded(err)
-	
-	if len(res.DataData) > 0 {
-		res.Total = res.DataData[0].TotalRows
+	if err != nil {
+		util.PanicIfNeeded(util.CustomBadRequest{
+			StatusCodes: 500,
+		})
 	}
+
+	res.Data = repo.Data
+	res.CountRows = repo.CountRows
 	return
 }
 
-func (t *exampleService) Create(ctx *fasthttp.RequestCtx, req entity.CreateExampleReq) (res entity.CreateExampleRes) {
-	newUUID := uuid.NewString()
-	item := model.Example{
-		UUID:   newUUID,
-		Nama:   sql.NullString{String: req.Nama, Valid: util.IsValid(req.Nama)},
-		Detail: sql.NullString{String: req.Detail, Valid: util.IsValid(req.Detail)},
-	}
-	t.dao.NewExampleQuery().Create(dtorepository.CreateExampleReq{
-		Item: item,
-	})
-
-	// detail := t.Detail(ctx, entity.DetailExampleReq{UUID: newUUID})
-	// res.Item = detail.Data
-	return
-}
-
-func (t *exampleService) Delete(req entity.DeleteExampleReq) {
-	t.dao.NewExampleQuery().Delete(dtorepository.DeleteExampleReq{
-		UUID: req.UUID,
-	})
-}
-
-func (t *exampleService) Detail(ctx *fasthttp.RequestCtx, req entity.DetailExampleReq) (res entity.DetailExampleRes) {
-	t.dao.NewExampleQuery().Detail(ctx, dtorepository.DetailExampleReq{
-		UUID: req.UUID,
-		Data: &res.Data,
-	})
-	return
-}
-
-func (t *exampleService) Put(req entity.PutExampleReq) {
-	item := model.Example{
-		UUID: req.UUID,
-		Nama: sql.NullString{String: req.Nama, Valid: util.IsValid(req.Nama)},
-	}
-	t.dao.NewExampleQuery().Put(dtorepository.PutExampleReq{
-		Item: item,
-	})
-}
-
-func (t *exampleService) Patch(ctx *fasthttp.RequestCtx, req entity.PatchExampleReq) (res entity.DetailExampleRes) {
-	item := model.Example{
+func (t *exampleService) Create(ctx *fasthttp.RequestCtx, req entity.CreateExampleReq) (res entity.DetailExampleRes) {
+	modelExample := model.ModelExample{
 		UUID:   req.UUID,
-		Nama:   sql.NullString{String: req.Nama, Valid: util.IsValid(req.Nama)},
-		Detail: sql.NullString{String: util.Convert().AnyToString(req.Detail), Valid: util.IsValid(req.Detail)},
+		Name:   sql.NullString{String: req.Nama, Valid: util.NewIsValid().String(req.Nama)},
+		Detail: sql.NullString{String: req.Detail, Valid: util.NewIsValid().String(req.Detail)},
 	}
-	t.dao.NewExampleQuery().Patch(ctx, dtorepository.PatchExampleReq{
-		Item: item,
+	err := t.dao.NewExampleQuery().Create(ctx, dtorepository.CreateExampleReq{
+		ModelExample: modelExample,
 	})
+	if util.NewIsValid().ErrUniqViol(err) {
+		util.PanicIfNeeded(util.CustomBadRequest{
+			StatusCodes: 409,
+		})
+	}
+
+	if err != nil {
+		util.PanicIfNeeded(util.CustomBadRequest{
+			Errors:      err.Error(),
+			Messages:    infrastructure.Localize("FAILED_CREATE"),
+			StatusCodes: 500,
+		})
+	}
 
 	res.Data = t.Detail(ctx, entity.DetailExampleReq{
 		UUID: req.UUID,
@@ -111,7 +86,98 @@ func (t *exampleService) Patch(ctx *fasthttp.RequestCtx, req entity.PatchExample
 	return
 }
 
-func (t *exampleService) Template() (res entity.TemplateExampleRes) {
+func (t *exampleService) Delete(ctx *fasthttp.RequestCtx, req entity.DeleteExampleReq) {
+	err:=t.dao.NewExampleQuery().Delete(ctx, dtorepository.DeleteExampleReq{
+		UUID: req.UUID,
+	})
+	if err != nil {
+		util.PanicIfNeeded(util.CustomBadRequest{
+			Errors:      err.Error(),
+			Messages:    infrastructure.Localize("FAILED_UPDATE"),
+			StatusCodes: 500,
+		})
+	}
+}
+
+func (t *exampleService) Detail(ctx *fasthttp.RequestCtx, req entity.DetailExampleReq) (res entity.DetailExampleRes) {
+	repo, err := t.dao.NewExampleQuery().Detail(ctx, dtorepository.DetailExampleReq{
+		UUID: req.UUID,
+	})
+	if err != nil && err == sql.ErrNoRows {
+		util.PanicIfNeeded(util.CustomBadRequest{
+			Messages: infrastructure.Localize("NOT_FOUND"),
+		})
+	} else if err != nil {
+		util.PanicIfNeeded(util.CustomBadRequest{
+			Errors:      err.Error(),
+			StatusCodes: 500,
+		})
+	}
+
+	res.Data = repo.Data
+	return
+}
+
+func (t *exampleService) Put(ctx *fasthttp.RequestCtx, req entity.PutExampleReq) (res entity.DetailExampleRes) {
+	modelExample := model.ModelExample{
+		UUID:   req.UUID,
+		Name:   sql.NullString{String: req.Nama, Valid: util.NewIsValid().String(req.Nama)},
+		Detail: sql.NullString{String: req.Detail, Valid: util.NewIsValid().String(req.Detail)},
+	}
+	err := t.dao.NewExampleQuery().Put(ctx, dtorepository.PutExampleReq{
+		ModelExample: modelExample,
+	})
+
+	if util.NewIsValid().ErrUniqViol(err) {
+		util.PanicIfNeeded(util.CustomBadRequest{
+			StatusCodes: 409,
+		})
+	}
+
+	if err != nil {
+		util.PanicIfNeeded(util.CustomBadRequest{
+			Errors:      err.Error(),
+			Messages:    infrastructure.Localize("FAILED_UPDATE"),
+			StatusCodes: 500,
+		})
+	}
+
+	res.Data = t.Detail(ctx, entity.DetailExampleReq{
+		UUID: req.UUID,
+	}).Data
+	return
+}
+
+func (t *exampleService) Patch(ctx *fasthttp.RequestCtx, req entity.PatchExampleReq) (res entity.DetailExampleRes) {
+	modelExample := model.ModelExample{
+		UUID:   req.UUID,
+		Name:   sql.NullString{String: req.Nama, Valid: util.NewIsValid().String(req.Nama)},
+		Detail: sql.NullString{String: util.Convert().AnyToString(req.Detail), Valid: util.NewIsValid().Any(req.Detail)},
+	}
+	err := t.dao.NewExampleQuery().Patch(ctx, dtorepository.PatchExampleReq{
+		ModelExample: modelExample,
+	})
+	if util.NewIsValid().ErrUniqViol(err) {
+		util.PanicIfNeeded(util.CustomBadRequest{
+			StatusCodes: 409,
+		})
+	}
+
+	if err != nil {
+		util.PanicIfNeeded(util.CustomBadRequest{
+			Errors:      err.Error(),
+			Messages:    infrastructure.Localize("FAILED_UPDATE"),
+			StatusCodes: 500,
+		})
+	}
+
+	res.Data = t.Detail(ctx, entity.DetailExampleReq{
+		UUID: req.UUID,
+	}).Data
+	return
+}
+
+func (t *exampleService) Template(ctx *fasthttp.RequestCtx) (res entity.TemplateExampleRes) {
 	f, err := excelize.OpenFile("./media/excel/Template Example.xlsx")
 	if err != nil {
 		util.PanicIfNeeded(err)
@@ -128,13 +194,13 @@ func (t *exampleService) Template() (res entity.TemplateExampleRes) {
 	return
 }
 
-func (t *exampleService) Import(req entity.ImportExampleReq) {
+func (t *exampleService) Import(ctx *fasthttp.RequestCtx, req entity.ImportExampleReq) {
 	var items []model.Example
 	for _, i := range req.Items {
 		items = append(items, model.Example{
 			UUID:   uuid.NewString(),
-			Nama:   sql.NullString{String: i.Nama, Valid: util.IsValid(i.Nama)},
-			Detail: sql.NullString{String: i.Detail, Valid: util.IsValid(i.Detail)},
+			Nama:   sql.NullString{String: i.Nama, Valid: util.NewIsValid().String(i.Nama)},
+			Detail: sql.NullString{String: i.Detail, Valid: util.NewIsValid().String(i.Detail)},
 		})
 	}
 
@@ -143,7 +209,7 @@ func (t *exampleService) Import(req entity.ImportExampleReq) {
 	})
 }
 
-func (t *exampleService) Pdf() (pdf *wkhtmltopdf.PDFGenerator) {
+func (t *exampleService) Pdf(ctx *fasthttp.RequestCtx) (pdf *wkhtmltopdf.PDFGenerator) {
 
 	pdf, err := wkhtmltopdf.NewPDFGenerator()
 	if err != nil {

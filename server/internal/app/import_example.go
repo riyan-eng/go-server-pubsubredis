@@ -11,7 +11,7 @@ import (
 func (s *ServiceServer) ImportExample(c *fiber.Ctx) error {
 	file, err := c.FormFile("import_file")
 	if err != nil {
-		util.PanicIfNeeded(util.BadRequest{Message: "tidak ada file yang diunggah terkait dengan key yang diberikan"})
+		util.PanicIfNeeded(util.CustomBadRequest{Messages: "tidak ada file yang diunggah terkait dengan key yang diberikan"})
 	}
 	body := util.ReadImportExcel[[]dto.ImportExample](file)
 	var items []entity.ImportExampleItemReq
@@ -22,7 +22,7 @@ func (s *ServiceServer) ImportExample(c *fiber.Ctx) error {
 		})
 	}
 
-	s.exampleService.Import(entity.ImportExampleReq{
+	s.exampleService.Import(c.Context(), entity.ImportExampleReq{
 		Items: items,
 	})
 

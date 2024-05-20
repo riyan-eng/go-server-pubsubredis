@@ -78,7 +78,7 @@ func (a *authenticationService) ResetPassword(req entity.AuthenticationResetPass
 	password := util.GenerateHash(req.Password)
 	tabelUser := model.User{
 		UUID:     claim.UserUUID,
-		Password: sql.NullString{String: password, Valid: util.IsValid(password)},
+		Password: sql.NullString{String: password, Valid: util.NewIsValid().String(password)},
 	}
 	a.dao.NewAuthenticationQuery().ResetPassword(dtorepository.AuthenticationResetPasswordReq{
 		TabelUser: tabelUser,
@@ -126,17 +126,17 @@ func (a *authenticationService) Register(req entity.AuthenticationRegisterReq) {
 	password := util.GenerateHash(req.Password)
 	tabelUser := model.User{
 		UUID:     req.UUIDUser,
-		Email:    sql.NullString{String: req.Email, Valid: util.IsValid(req.Email)},
-		Password: sql.NullString{String: password, Valid: util.IsValid(password)},
-		Role:     sql.NullString{String: req.KodeRole, Valid: util.IsValid(req.KodeRole)},
-		UserData: sql.NullString{String: req.UUIDUserData, Valid: util.IsValid(req.UUIDUserData)},
+		Email:    sql.NullString{String: req.Email, Valid: util.NewIsValid().String(req.Email)},
+		Password: sql.NullString{String: password, Valid: util.NewIsValid().String(password)},
+		Role:     sql.NullString{String: req.KodeRole, Valid: util.NewIsValid().String(req.KodeRole)},
+		UserData: sql.NullString{String: req.UUIDUserData, Valid: util.NewIsValid().String(req.UUIDUserData)},
 		IsAktif:  sql.NullBool{Bool: true, Valid: true},
 	}
 	tableUserData := model.UserData{
 		UUID:         req.UUIDUserData,
-		Nama:         sql.NullString{String: req.Nama, Valid: util.IsValid(req.Nama)},
-		NIK:          sql.NullString{String: req.NIK, Valid: util.IsValid(req.NIK)},
-		NomorTelepon: sql.NullString{String: req.NomorTelepon, Valid: util.IsValid(req.NomorTelepon)},
+		Nama:         sql.NullString{String: req.Nama, Valid: util.NewIsValid().String(req.Nama)},
+		NIK:          sql.NullString{String: req.NIK, Valid: util.NewIsValid().String(req.NIK)},
+		NomorTelepon: sql.NullString{String: req.NomorTelepon, Valid: util.NewIsValid().String(req.NomorTelepon)},
 	}
 	a.dao.NewAuthenticationQuery().Register(dtorepository.AuthenticationRegisterReq{
 		TabelUser:     tabelUser,

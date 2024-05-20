@@ -27,7 +27,7 @@ func init() {
 	if numCPU <= 1 {
 		runtime.GOMAXPROCS(1)
 	} else {
-		runtime.GOMAXPROCS(numCPU / 2)
+		runtime.GOMAXPROCS(numCPU - 1)
 	}
 
 	env.LoadEnvironmentFile()

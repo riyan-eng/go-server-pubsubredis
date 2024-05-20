@@ -12,7 +12,7 @@ import (
 // @Router      /pdf/	[get]
 // @Security ApiKeyAuth
 func (s *ServiceServer) DownloadPDF(c *fiber.Ctx) error {
-	pdf := s.exampleService.Pdf()
+	pdf := s.exampleService.Pdf(c.Context())
 	fileName := "pdf_example"
 	c.Response().Header.Set("Content-Type", "application/pdf")
 	c.Response().Header.Set("Content-Disposition", fmt.Sprintf("attachment; filename=%v.pdf", fileName))

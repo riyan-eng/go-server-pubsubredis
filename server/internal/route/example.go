@@ -10,6 +10,7 @@ import (
 func Example(handler *app.ServiceServer, enforcer *casbin.Enforcer) *fiber.App {
 	router := fiber.New()
 	router.Get("/", handler.ListExample)
+	// router.Use(middleware.AuthorizeJwt())
 	router.Post("/", handler.CreateExample)
 	router.Get("/:id/", handler.DetailExample)
 	router.Put("/:id", handler.PutExample)

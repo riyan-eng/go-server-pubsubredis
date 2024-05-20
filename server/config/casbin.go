@@ -26,5 +26,6 @@ func NewEnforcer() *casbin.Enforcer {
 	enforce.AddPolicy("ADMIN", "/example/*", "(GET)|(POST)|(PATCH)|(PUT)|(DELETE)")
 	enforce.AddPolicy("MASYARAKAT", "/example/*", "(GET)")
 	enforce.LoadPolicy()
+
 	return enforce
 }

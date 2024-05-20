@@ -17,7 +17,7 @@ import (
 // @Security ApiKeyAuth
 func (s *ServiceServer) DetailExample(c *fiber.Ctx) error {
 	service := s.exampleService.Detail(c.Context(), entity.DetailExampleReq{
-		UUID: util.NewQuery().CheckExistingData("example", "example", c.Params("id")),
+		UUID: c.Params("id"),
 	})
 	return util.NewResponse(c).Success(service.Data, nil, infrastructure.Localize("OK_READ"))
 }

@@ -10,40 +10,40 @@ other = "{{.Name}} has {{.UnreadEmailCount}} unread emails."
 other = "Welcome to Golang Boilerplate One APIs"
 
 [OK_CREATE]              
-other = "Successfully inserted data."
+other = "Successfully insert data."
 
 [OK_DELETE]             
-other = "Successfully deleted data."
+other = "Successfully delete data."
 
 [OK_UPDATE]             
-other = "Successfully updated data."
+other = "Successfully update data."
 
 [OK_READ]               
-other = "Successfully displayed data."
+other = "Successfully display data."
 
 [OK_IMPORT]             
-other = "Successfully imported data."
+other = "Successfully import data."
 
 [OK_EXPORT]             
-other = "Successfully exported data."
+other = "Successfully export data."
 
 [OK_UPLOAD]             
-other = "Successfully uploaded data."
+other = "Successfully upload data."
 
 [OK_LOGIN]              
-other = "Successfully logged in."
+other = "Successfully log in."
 
 [OK_REFRESH]             
-other = "Successfully refreshed token."
+other = "Successfully refresh token."
 
 [OK_LOGOUT]             
-other = "Successfully logged out."
+other = "Successfully log out."
 
 [OK_REQUEST_TOKEN_RESET] 
-other = "Successfully requested token."
+other = "Successfully request token."
 
 [OK_CHANGE_PASSWORD]     
-other = "Successfully updated password."
+other = "Successfully update password."
 
 [FAILED_CREATE]          
 other = "Failed to insert data."
@@ -53,6 +53,15 @@ other = "Failed to delete data."
 
 [FAILED_UPDATE]          
 other = "Failed to update data."
+
+[FAILED_CREATE_NO_DATA]          
+other = "No data entered."
+
+[FAILED_DELETE_NO_DATA]          
+other = "No data deleted."
+
+[FAILED_UPDATE_NO_DATA]          
+other = "No data updated."
 
 [FAILED_READ]            
 other = "Failed to display data."

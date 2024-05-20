@@ -31,8 +31,8 @@ func NewPagination() *paginationStruct {
 	return &paginationStruct{}
 }
 
-func (p *paginationStruct) GetTotalPages(totalRows, limit int) (totalPages int) {
-	totalPages = int(math.Ceil(float64(totalRows) / float64(limit)))
+func (p *paginationStruct) GetCountPages(totalRows, limit int) (countPages int) {
+	countPages = int(math.Ceil(float64(totalRows) / float64(limit)))
 	return
 }
 

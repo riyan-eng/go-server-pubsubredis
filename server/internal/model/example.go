@@ -16,3 +16,9 @@ type Example struct {
 func (Example) TableName() string {
 	return "example"
 }
+
+type ModelExample struct {
+	UUID   string         `db:"uuid"`
+	Name   sql.NullString `db:"nama"`
+	Detail sql.NullString `db:"detail"`
+}

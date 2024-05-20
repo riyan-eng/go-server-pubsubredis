@@ -10,7 +10,7 @@ func TestGetTotalPages(t *testing.T) {
 	limit := 5
 	expectedTotalPages := 2
 
-	totalPages := p.GetTotalPages(totalRows, limit)
+	totalPages := p.GetCountPages(totalRows, limit)
 
 	if totalPages != expectedTotalPages {
 		t.Errorf("GetTotalPages(%d, %d) = %d; want %d", totalRows, limit, totalPages, expectedTotalPages)

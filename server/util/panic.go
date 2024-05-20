@@ -31,14 +31,16 @@ func PanicSql(err error) {
 				temp1 := strings.Split(pqErr.Detail, "=")
 				temp2 := strings.ReplaceAll(temp1[1], "(", "")
 				temp2 = strings.ReplaceAll(temp2, ")", "")
-				PanicIfNeeded(Duplicate{
-					Message: temp2,
+				PanicIfNeeded(CustomBadRequest{
+					Errors:      temp2,
+					Messages:    infrastructure.Localize("CONFLICT"),
+					StatusCodes: 409,
 				})
 			}
 		}
 		if err == sql.ErrNoRows {
-			PanicIfNeeded(NoData{
-				Message: err.Error(),
+			PanicIfNeeded(CustomBadRequest{
+				Messages: infrastructure.Localize("NOT_FOUND"),
 			})
 		}
 		PanicIfNeeded(err)

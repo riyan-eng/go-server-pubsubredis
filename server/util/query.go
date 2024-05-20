@@ -24,8 +24,11 @@ func (q *queryStruct) CheckExistingData(object_key, table, uuid string) (ruuid s
 	}
 	err = scan.Row(&ruuid, sqlrows)
 	if err != nil {
-		PanicIfNeeded(NoData{
-			Message: fmt.Sprintf("%v with id: %v not found.", object_key, uuid),
+		// PanicIfNeeded(NoData{
+		// 	Message: fmt.Sprintf("%v with id: %v not found.", object_key, uuid),
+		// })
+		PanicIfNeeded(CustomBadRequest{
+			Messages: infrastructure.Localize("NOT_FOUND"),
 		})
 	}
 	return

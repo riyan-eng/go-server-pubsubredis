@@ -1,13 +1,13 @@
 module server
 
-go 1.22.0
+go 1.22.3
 
 require (
 	github.com/Blank-Xu/sql-adapter v1.0.0
 	github.com/BurntSushi/toml v1.3.2
 	github.com/SebastiaanKlippert/go-wkhtmltopdf v1.9.2
 	github.com/blockloop/scan/v2 v2.5.0
-	github.com/casbin/casbin/v2 v2.88.0
+	github.com/casbin/casbin/v2 v2.89.0
 	github.com/gofiber/fiber/v2 v2.52.4
 	github.com/gofiber/swagger v1.0.0
 	github.com/golang-jwt/jwt/v5 v5.2.1
@@ -22,15 +22,15 @@ require (
 	github.com/riyan-eng/riyanisgood v1.0.1
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/spf13/viper v1.18.2
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	github.com/swaggo/swag v1.16.3
 	github.com/szyhf/go-excel v1.5.3
 	github.com/thedevsaddam/govalidator v1.9.10
-	github.com/valyala/fasthttp v1.52.0
+	github.com/valyala/fasthttp v1.53.0
 	github.com/xuri/excelize/v2 v2.8.1
-	golang.org/x/crypto v0.22.0
+	golang.org/x/crypto v0.23.0
 	golang.org/x/sync v0.7.0
-	golang.org/x/text v0.14.0
+	golang.org/x/text v0.15.0
 	gorm.io/driver/postgres v1.5.7
 	gorm.io/gorm v1.25.10
 )
@@ -57,7 +57,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
-	github.com/klauspost/compress v1.17.6 // indirect
+	github.com/klauspost/compress v1.17.7 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
@@ -89,8 +89,8 @@ require (
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.9.0 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
-	golang.org/x/net v0.21.0 // indirect
-	golang.org/x/sys v0.19.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
+	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	golang.org/x/tools v0.13.0 // indirect
 	google.golang.org/protobuf v1.31.0 // indirect

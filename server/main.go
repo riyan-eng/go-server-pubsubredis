@@ -14,12 +14,13 @@ import (
 	"server/internal/route"
 	"server/internal/service"
 
+	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/monitor"
-	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/swagger"
+
+	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
 func init() {
@@ -52,7 +53,10 @@ func main() {
 	fiberApp := fiber.New(config.NewFiberConfig())
 	fiberApp.Use(cors.New(config.NewCorsConfig()))
 	fiberApp.Use(recover.New())
-	fiberApp.Use(logger.New())
+	configZeroLog := config.NewZeroLog()
+	fiberApp.Use(fiberzerolog.New(fiberzerolog.Config{
+		Logger: &configZeroLog,
+	}))
 	fiberApp.Use(infrastructure.Localizer)
 
 	fiberApp.Get("/", func(c *fiber.Ctx) error {

@@ -26,7 +26,7 @@ type ExampleService interface {
 	Delete(*fasthttp.RequestCtx, entity.DeleteExampleReq)
 	Template(*fasthttp.RequestCtx) entity.TemplateExampleRes
 	Import(*fasthttp.RequestCtx, entity.ImportExampleReq)
-	Pdf(*fasthttp.RequestCtx) (pdf *wkhtmltopdf.PDFGenerator)
+	Pdf(*fasthttp.RequestCtx) *wkhtmltopdf.PDFGenerator
 }
 
 type exampleService struct {
@@ -87,7 +87,7 @@ func (t *exampleService) Create(ctx *fasthttp.RequestCtx, req entity.CreateExamp
 }
 
 func (t *exampleService) Delete(ctx *fasthttp.RequestCtx, req entity.DeleteExampleReq) {
-	err:=t.dao.NewExampleQuery().Delete(ctx, dtorepository.DeleteExampleReq{
+	err := t.dao.NewExampleQuery().Delete(ctx, dtorepository.DeleteExampleReq{
 		UUID: req.UUID,
 	})
 	if err != nil {

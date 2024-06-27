@@ -15,11 +15,11 @@ var bundle *i18n.Bundle
 func NewLocalizer() {
 	bundle = i18n.NewBundle(language.English)
 	bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
-	if _, err := bundle.LoadMessageFile("./localize/en.toml"); err != nil {
+	if _, err := bundle.LoadMessageFile("./locale/en.toml"); err != nil {
 		fmt.Printf("localize: %v", err.Error())
 		os.Exit(1)
 	}
-	if _, err := bundle.LoadMessageFile("./localize/id.toml"); err != nil {
+	if _, err := bundle.LoadMessageFile("./locale/id.toml"); err != nil {
 		fmt.Printf("localize: %v", err.Error())
 		os.Exit(1)
 	}

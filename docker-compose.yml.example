@@ -12,6 +12,8 @@ services:
       - ./server/env.json:/app/env.json
       - ./server/casbin.conf:/app/casbin.conf
       - ./server/media:/app/media
+      - ./server/locale:/app/locale
+      - ./server/log:/app/log
   subscriber:
     build: ./subscriber
     container_name: bootstrap-subscriber

@@ -39,7 +39,8 @@ func (s *ServiceServer) ListExample(c *fiber.Ctx) error {
 		CountPages: util.NewPagination().GetCountPages(service.CountRows, pageMeta.Limit),
 	}
 
-	return util.NewResponse(c).Success(service.Data, meta, infrastructure.Localize("OK_CREATE"))
+	return util.NewResponse(c).Success(service.Data, meta, infrastructure.Localize("OK_READ"))
+
 	// accessToken, accessExpiredAt, err := util.NewToken().CreateAccess(c.Context(), "id")
 	// if err != nil {
 	// 	return util.NewResponse(c).Error(err, "token error", 400)
